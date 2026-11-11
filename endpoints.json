@@ -1,0 +1,136 @@
+{
+  "info": {
+    "_postman_id": "b8f4d9e2-3c1a-4f7b-9e6d-1a2b3c4d5e6f",
+    "name": "Pompompurin Maki API",
+    "description": "Colección de endpoints REST para consultar todos los makis (GET), buscar por ID (GET /{id}) y registrar makis (POST) en Spring Boot.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Listar todos los makis (GET)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/makis",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "makis"
+          ]
+        },
+        "description": "Obtiene la lista completa de makis almacenados en memoria."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Buscar maki por ID (GET)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/makis/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "makis",
+            "1"
+          ]
+        },
+        "description": "Obtiene un maki específico por su ID (200 OK si existe, 404 Not Found si no existe)."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Crear maki California (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"California\",\n  \"price\": 20.5,\n  \"pieces\": 8,\n  \"ingredients\": \"Kanikama, palta, pepino\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/makis",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "makis"
+          ]
+        },
+        "description": "Registra un nuevo maki California con 4 datos de entrada y devuelve el objeto creado con su ID autogenerado (201 Created)."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Crear Pompompurin Roll (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Pompompurin Roll\",\n  \"price\": 28.0,\n  \"pieces\": 10,\n  \"ingredients\": \"Salmón, mango, queso crema, salsa tare\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/makis",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "makis"
+          ]
+        },
+        "description": "Registra un segundo maki especial para verificar que la lista en memoria crece dinámicamente."
+      },
+      "response": []
+    }
+  ]
+}
