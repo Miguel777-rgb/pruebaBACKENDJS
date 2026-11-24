@@ -1,7 +1,7 @@
 package com.maki.pompompurin.service;
 
 import com.maki.pompompurin.model.Maki;
-import java.util.ArrayList;
+import com.maki.pompompurin.repository.MakiRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -9,32 +9,44 @@ import org.springframework.stereotype.Service;
 @Service
 public class MakiService {
 
-    // "Base de datos" en memoria: se reinicia cada vez que se apaga la app
-    private final List<Maki> makis = new ArrayList<>();
-    private long nextId = 1;
+    // Los datos ahora viven en PostgreSQL (ya no en una lista en memoria)
+    private final MakiRepository makiRepository;
 
-    public MakiService() {
-        create(new Maki(null, "Acevichado", 25.0, 10, "Langostino, palta, salsa acevichada"));
-        create(new Maki(null, "Furai", 22.0, 10, "Langostino empanizado, queso crema"));
+    public MakiService(MakiRepository makiRepository) {
+        this.makiRepository = makiRepository;
     }
 
     public List<Maki> listAll() {
-        return makis;
+        return makiRepository.findAll();
     }
 
     public Optional<Maki> findById(Long id) {
-        for (Maki maki : makis) {
-            if (maki.id().equals(id)) {
-                return Optional.of(maki);
-            }
-        }
-        return Optional.empty();
+        return makiRepository.findById(id);
     }
 
     public Maki create(Maki maki) {
-        // El cliente no envía el id: lo genera el servidor
-        Maki nuevo = new Maki(nextId++, maki.name(), maki.price(), maki.pieces(), maki.ingredients());
-        makis.add(nuevo);
-        return nuevo;
+        // El cliente no envía el id: lo genera la base de datos
+        maki.setId(null);
+        return makiRepository.save(maki);
+    }
+
+    public Optional<Maki> update(Long id, Maki datos) {
+        // Si existe, copiamos los nuevos valores y guardamos; si no, Optional vacío (404)
+        return makiRepository.findById(id).map(maki -> {
+            maki.setName(datos.getName());
+            maki.setPrice(datos.getPrice());
+            maki.setPieces(datos.getPieces());
+            maki.setIngredients(datos.getIngredients());
+            maki.setTamanio(datos.getTamanio());
+            return makiRepository.save(maki);
+        });
+    }
+
+    public boolean delete(Long id) {
+        if (!makiRepository.existsById(id)) {
+            return false;
+        }
+        makiRepository.deleteById(id);
+        return true;
     }
 }

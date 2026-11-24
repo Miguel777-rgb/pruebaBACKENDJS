@@ -1,5 +1,52 @@
 package com.maki.pompompurin.model;
 
-// Un record genera solo el constructor, los getters, equals, hashCode y toString
-public record Maki(Long id, String name, double price, int pieces, String ingredients) {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+// @Entity: cada objeto Maki se guarda como una fila de la tabla "makis"
+@Entity
+@Table(name = "makis")
+public class Maki {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // la BD genera el id (1, 2, 3...)
+    private Long id;
+    private String name;
+    private double price;
+    private int pieces;
+    private String ingredients;
+    private String tamanio;
+
+    // JPA necesita un constructor vacío
+    public Maki() {
+    }
+
+    public Maki(String name, double price, int pieces, String ingredients, String tamanio) {
+        this.name = name;
+        this.price = price;
+        this.pieces = pieces;
+        this.ingredients = ingredients;
+        this.tamanio = tamanio;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+
+    public int getPieces() { return pieces; }
+    public void setPieces(int pieces) { this.pieces = pieces; }
+
+    public String getIngredients() { return ingredients; }
+    public void setIngredients(String ingredients) { this.ingredients = ingredients; }
+
+    public String getTamanio() { return tamanio; }
+    public void setTamanio(String tamanio) { this.tamanio = tamanio; }
 }

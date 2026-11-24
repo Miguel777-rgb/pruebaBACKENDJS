@@ -1,0 +1,18 @@
+# Base de datos PostgreSQL para la API de makis
+# Levantar:  docker compose up -d
+# Apagar:    docker compose down   (los datos se conservan en el volumen "makis-data")
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: makis-db
+    environment:
+      POSTGRES_DB: makisdb
+      POSTGRES_USER: maki
+      POSTGRES_PASSWORD: maki123
+    ports:
+      - "5434:5432"   # puerto 5434 en tu PC -> 5432 dentro del contenedor
+    volumes:
+      - makis-data:/var/lib/postgresql/data
+
+volumes:
+  makis-data:

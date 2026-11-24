@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 960px; margin: 20px auto; padding: 0 16px; color: #1f2937; }
+    h1 { color: #d97706; margin-bottom: 4px; }
+    fieldset { border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 16px; padding: 12px 16px; }
+    legend { font-weight: bold; }
+    label { display: block; margin: 8px 0 4px; font-size: 14px; }
+    input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 4px; }
+    .fila { display: flex; gap: 12px; flex-wrap: wrap; }
+    .fila > div { flex: 1; min-width: 140px; }
+    button { padding: 8px 14px; border: 0; border-radius: 4px; cursor: pointer; margin: 12px 6px 0 0; }
+    td button { margin: 2px; }
+    .primario { background: #d97706; color: #fff; }
+    .secundario { background: #e5e7eb; }
+    .peligro { background: #dc2626; color: #fff; }
+    .tabla { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #e5e7eb; padding: 8px; text-align: left; font-size: 14px; }
+    th { background: #fef3c7; }
+    #mensaje { min-height: 20px; margin: 12px 0; font-weight: bold; }
+    .ok { color: #15803d; }
+    .error { color: #dc2626; }
+  </style>
+</head>
+<body>
+  <h1>CRUD de Makis</h1>
+  <p>Página en Apps Script que consume la API REST de Spring Boot (<code>/api/makis</code>) guardada en PostgreSQL.</p>
+
+  <!-- 1. Configuración: URL pública del backend -->
+  <fieldset>
+    <legend>Configuración</legend>
+    <label for="apiUrl">URL pública del backend Spring Boot (sin /api/makis ni "/" al final)</label>
+    <input id="apiUrl" placeholder="https://mi-codespace-8081.app.github.dev">
+    <button class="secundario" onclick="guardarUrl()">Guardar URL</button>
+  </fieldset>
+
+  <!-- 2. Formulario: sirve para crear y para editar -->
+  <form id="formulario" onsubmit="guardar(event)">
+    <fieldset>
+      <legend id="tituloFormulario">Nuevo maki</legend>
+      <input type="hidden" id="id">
+      <div class="fila">
+        <div><label for="name">Nombre</label><input id="name" required></div>
+        <div><label for="price">Precio (S/)</label><input id="price" type="number" step="0.01" min="0" required></div>
+        <div><label for="pieces">Piezas</label><input id="pieces" type="number" step="1" min="1" required></div>
+        <div>
+          <label for="tamanio">Tamaño</label>
+          <select id="tamanio" required>
+            <option>Pequeño</option>
+            <option>Mediano</option>
+            <option>Grande</option>
+          </select>
+        </div>
+      </div>
+      <label for="ingredients">Ingredientes</label>
+      <input id="ingredients" required>
+      <button type="submit" class="primario" id="botonGuardar">Crear</button>
+      <button type="button" class="secundario" onclick="limpiarFormulario()">Cancelar</button>
+    </fieldset>
+  </form>
+
+  <div id="mensaje"></div>
+
+  <!-- 3. Tabla con todos los makis -->
+  <div class="tabla">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Nombre</th><th>Precio (S/)</th><th>Piezas</th><th>Ingredientes</th><th>Tamaño</th><th>Acciones</th></tr>
+      </thead>
+      <tbody id="tabla"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const campo = id => document.getElementById(id);
+
+    function mostrarMensaje(texto, esError) {
+      campo('mensaje').textContent = texto;
+      campo('mensaje').className = esError ? 'error' : 'ok';
+    }
+
+    function mostrarError(error) {
+      mostrarMensaje(error.message || error, true);
+    }
+
+    // ----- Configuración -----
+    function guardarUrl() {
+      google.script.run
+        .withSuccessHandler(url => { campo('apiUrl').value = url; mostrarMensaje('URL guardada.'); listar(); })
+        .withFailureHandler(mostrarError)
+        .guardarUrlApi(campo('apiUrl').value);
+    }
+
+    // ----- READ -----
+    function listar() {
+      google.script.run
+        .withSuccessHandler(pintarTabla)
+        .withFailureHandler(mostrarError)
+        .listarMakis();
+    }
+
+    function pintarTabla(makis) {
+      const tbody = campo('tabla');
+      tbody.innerHTML = '';
+      if (makis.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7">No hay makis registrados.</td></tr>';
+        return;
+      }
+      makis.forEach(maki => {
+        const fila = document.createElement('tr');
+        [maki.id, maki.name, maki.price.toFixed(2), maki.pieces, maki.ingredients, maki.tamanio].forEach(valor => {
+          const celda = document.createElement('td');
+          celda.textContent = valor; // textContent evita inyectar HTML
+          fila.appendChild(celda);
+        });
+        const acciones = document.createElement('td');
+        acciones.appendChild(crearBoton('Editar', 'secundario', () => editar(maki)));
+        acciones.appendChild(crearBoton('Eliminar', 'peligro', () => eliminar(maki)));
+        fila.appendChild(acciones);
+        tbody.appendChild(fila);
+      });
+    }
+
+    function crearBoton(texto, clase, alHacerClic) {
+      const boton = document.createElement('button');
+      boton.textContent = texto;
+      boton.className = clase;
+      boton.onclick = alHacerClic;
+      return boton;
+    }
+
+    // ----- CREATE y UPDATE (mismo formulario) -----
+    function guardar(evento) {
+      evento.preventDefault(); // evita que el formulario recargue la página
+      const id = campo('id').value;
+      const maki = {
+        name: campo('name').value,
+        price: Number(campo('price').value),
+        pieces: Number(campo('pieces').value),
+        ingredients: campo('ingredients').value,
+        tamanio: campo('tamanio').value
+      };
+
+      const alTerminar = () => {
+        mostrarMensaje(id ? 'Maki actualizado.' : 'Maki creado.');
+        limpiarFormulario();
+        listar();
+      };
+
+      if (id) {
+        google.script.run.withSuccessHandler(alTerminar).withFailureHandler(mostrarError).actualizarMaki(id, maki);
+      } else {
+        google.script.run.withSuccessHandler(alTerminar).withFailureHandler(mostrarError).crearMaki(maki);
+      }
+    }
+
+    function editar(maki) {
+      ['id', 'name', 'price', 'pieces', 'ingredients', 'tamanio'].forEach(nombre => campo(nombre).value = maki[nombre]);
+      campo('tituloFormulario').textContent = 'Editando maki #' + maki.id;
+      campo('botonGuardar').textContent = 'Actualizar';
+      campo('name').focus();
+    }
+
+    function limpiarFormulario() {
+      campo('formulario').reset();
+      campo('id').value = '';
+      campo('tituloFormulario').textContent = 'Nuevo maki';
+      campo('botonGuardar').textContent = 'Crear';
+    }
+
+    // ----- DELETE -----
+    function eliminar(maki) {
+      if (!confirm('¿Eliminar el maki "' + maki.name + '"?')) return;
+      google.script.run
+        .withSuccessHandler(() => { mostrarMensaje('Maki eliminado.'); listar(); })
+        .withFailureHandler(mostrarError)
+        .eliminarMaki(maki.id);
+    }
+
+    // Al abrir la página: carga la URL guardada y la lista de makis
+    google.script.run
+      .withSuccessHandler(url => {
+        campo('apiUrl').value = url;
+        if (url) listar(); else mostrarMensaje('Configura la URL del backend para empezar.', true);
+      })
+      .withFailureHandler(mostrarError)
+      .obtenerUrlApi();
+  </script>
+</body>
+</html>

@@ -2,13 +2,13 @@
   "info": {
     "_postman_id": "b8f4d9e2-3c1a-4f7b-9e6d-1a2b3c4d5e6f",
     "name": "Pompompurin Maki API",
-    "description": "Colección de endpoints REST para consultar todos los makis (GET), buscar por ID (GET /{id}) y registrar makis (POST) en Spring Boot.",
+    "description": "CRUD completo de makis en Spring Boot + PostgreSQL: listar (GET), buscar por ID (GET /{id}), crear (POST), actualizar (PUT /{id}) y eliminar (DELETE /{id}).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8080",
+      "value": "http://localhost:8081",
       "type": "string"
     }
   ],
@@ -34,7 +34,7 @@
             "makis"
           ]
         },
-        "description": "Obtiene la lista completa de makis almacenados en memoria."
+        "description": "Obtiene la lista completa de makis guardados en PostgreSQL."
       },
       "response": []
     },
@@ -77,7 +77,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"California\",\n  \"price\": 20.5,\n  \"pieces\": 8,\n  \"ingredients\": \"Kanikama, palta, pepino\"\n}",
+          "raw": "{\n  \"name\": \"California\",\n  \"price\": 20.5,\n  \"pieces\": 8,\n  \"ingredients\": \"Kanikama, palta, pepino\",\n  \"tamanio\": \"Mediano\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -94,7 +94,7 @@
             "makis"
           ]
         },
-        "description": "Registra un nuevo maki California con 4 datos de entrada y devuelve el objeto creado con su ID autogenerado (201 Created)."
+        "description": "Registra un nuevo maki y devuelve el objeto creado con su ID autogenerado por la base de datos (201 Created)."
       },
       "response": []
     },
@@ -111,7 +111,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Pompompurin Roll\",\n  \"price\": 28.0,\n  \"pieces\": 10,\n  \"ingredients\": \"Salmón, mango, queso crema, salsa tare\"\n}",
+          "raw": "{\n  \"name\": \"Pompompurin Roll\",\n  \"price\": 28.0,\n  \"pieces\": 10,\n  \"ingredients\": \"Salmón, mango, queso crema, salsa tare\",\n  \"tamanio\": \"Grande\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -128,7 +128,62 @@
             "makis"
           ]
         },
-        "description": "Registra un segundo maki especial para verificar que la lista en memoria crece dinámicamente."
+        "description": "Registra un segundo maki especial (201 Created)."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Actualizar maki (PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Acevichado Especial\",\n  \"price\": 27.0,\n  \"pieces\": 12,\n  \"ingredients\": \"Langostino, palta, salsa acevichada, ajonjolí\",\n  \"tamanio\": \"Grande\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/makis/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "makis",
+            "1"
+          ]
+        },
+        "description": "Reemplaza los datos del maki con ID 1 (200 OK con el maki actualizado, 404 Not Found si no existe)."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Eliminar maki (DELETE)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/makis/2",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "makis",
+            "2"
+          ]
+        },
+        "description": "Elimina el maki con ID 2 (204 No Content, 404 Not Found si no existe)."
       },
       "response": []
     }
