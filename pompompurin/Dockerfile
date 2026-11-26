@@ -1,8 +1,8 @@
-# ---------- Etapa 1: compilar el .jar con Gradle (JDK 25) ----------
-FROM eclipse-temurin:25-jdk AS build
+# ---------- Etapa 1: compilar el .jar (imagen oficial con Gradle 9.8.2 y JDK 25 ya instalados) ----------
+FROM gradle:9.8.2-jdk25 AS build
 WORKDIR /app
 COPY . .
-RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
+RUN gradle bootJar --no-daemon
 
 # ---------- Etapa 2: imagen liviana que solo ejecuta el .jar (JRE 25) ----------
 FROM eclipse-temurin:25-jre
