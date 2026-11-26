@@ -70,7 +70,6 @@ pruebaBACKENDJS/
 | <img src="https://api.iconify.design/lucide/coins.svg?color=%2310b981" width="15" height="15" align="absmiddle" /> `price` | `double` | Precio en soles (S/). | `25.0` |
 | <img src="https://api.iconify.design/lucide/hash.svg?color=%23a855f7" width="15" height="15" align="absmiddle" /> `pieces` | `int` | Cantidad de piezas. | `10` |
 | <img src="https://api.iconify.design/lucide/list-checks.svg?color=%23ec4899" width="15" height="15" align="absmiddle" /> `ingredients` | `String` | Ingredientes principales. | `"Langostino, palta, salsa acevichada"` |
-| <img src="https://api.iconify.design/lucide/ruler.svg?color=%2314b8a6" width="15" height="15" align="absmiddle" /> `tamanio` | `String` | Tamaño: `Pequeño`, `Mediano` o `Grande`. | `"Grande"` |
 
 ---
 
@@ -91,8 +90,7 @@ Ejemplo de cuerpo JSON para `POST` y `PUT`:
   "name": "California",
   "price": 20.5,
   "pieces": 8,
-  "ingredients": "Kanikama, palta, pepino",
-  "tamanio": "Mediano"
+  "ingredients": "Kanikama, palta, pepino"
 }
 ```
 

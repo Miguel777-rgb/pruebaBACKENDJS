@@ -77,7 +77,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"California\",\n  \"price\": 20.5,\n  \"pieces\": 8,\n  \"ingredients\": \"Kanikama, palta, pepino\",\n  \"tamanio\": \"Mediano\"\n}",
+          "raw": "{\n  \"name\": \"California\",\n  \"price\": 20.5,\n  \"pieces\": 8,\n  \"ingredients\": \"Kanikama, palta, pepino\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -111,7 +111,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Pompompurin Roll\",\n  \"price\": 28.0,\n  \"pieces\": 10,\n  \"ingredients\": \"Salmón, mango, queso crema, salsa tare\",\n  \"tamanio\": \"Grande\"\n}",
+          "raw": "{\n  \"name\": \"Pompompurin Roll\",\n  \"price\": 28.0,\n  \"pieces\": 10,\n  \"ingredients\": \"Salmón, mango, queso crema, salsa tare\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -145,7 +145,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Acevichado Especial\",\n  \"price\": 27.0,\n  \"pieces\": 12,\n  \"ingredients\": \"Langostino, palta, salsa acevichada, ajonjolí\",\n  \"tamanio\": \"Grande\"\n}",
+          "raw": "{\n  \"name\": \"Acevichado Especial\",\n  \"price\": 27.0,\n  \"pieces\": 12,\n  \"ingredients\": \"Langostino, palta, salsa acevichada, ajonjolí\"\n}",
           "options": {
             "raw": {
               "language": "json"

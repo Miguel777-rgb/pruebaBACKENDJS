@@ -37,7 +37,6 @@ public class MakiService {
             maki.setPrice(datos.getPrice());
             maki.setPieces(datos.getPieces());
             maki.setIngredients(datos.getIngredients());
-            maki.setTamanio(datos.getTamanio());
             return makiRepository.save(maki);
         });
     }

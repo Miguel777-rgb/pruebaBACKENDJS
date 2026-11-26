@@ -19,8 +19,8 @@ public class PompompurinApplication {
 	CommandLineRunner cargarDatosIniciales(MakiRepository makiRepository) {
 		return args -> {
 			if (makiRepository.count() == 0) {
-				makiRepository.save(new Maki("Acevichado", 25.0, 10, "Langostino, palta, salsa acevichada", "Grande"));
-				makiRepository.save(new Maki("Furai", 22.0, 10, "Langostino empanizado, queso crema", "Pequeño"));
+				makiRepository.save(new Maki("Acevichado", 25.0, 10, "Langostino, palta, salsa acevichada"));
+				makiRepository.save(new Maki("Furai", 22.0, 10, "Langostino empanizado, queso crema"));
 			}
 		};
 	}

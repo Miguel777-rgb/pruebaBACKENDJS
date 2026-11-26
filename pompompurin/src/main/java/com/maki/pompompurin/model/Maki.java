@@ -18,18 +18,16 @@ public class Maki {
     private double price;
     private int pieces;
     private String ingredients;
-    private String tamanio;
 
     // JPA necesita un constructor vacío
     public Maki() {
     }
 
-    public Maki(String name, double price, int pieces, String ingredients, String tamanio) {
+    public Maki(String name, double price, int pieces, String ingredients) {
         this.name = name;
         this.price = price;
         this.pieces = pieces;
         this.ingredients = ingredients;
-        this.tamanio = tamanio;
     }
 
     public Long getId() { return id; }
@@ -46,7 +44,4 @@ public class Maki {
 
     public String getIngredients() { return ingredients; }
     public void setIngredients(String ingredients) { this.ingredients = ingredients; }
-
-    public String getTamanio() { return tamanio; }
-    public void setTamanio(String tamanio) { this.tamanio = tamanio; }
 }
