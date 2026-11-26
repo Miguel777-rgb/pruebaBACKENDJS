@@ -1,0 +1,6 @@
+# Archivos que NO se copian a la imagen
+**/.env
+.gradle
+build
+bin
+.vscode

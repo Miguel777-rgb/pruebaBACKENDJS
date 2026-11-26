@@ -1,18 +1,10 @@
-# Base de datos PostgreSQL para la API de makis
-# Levantar:  docker compose up -d
-# Apagar:    docker compose down   (los datos se conservan en el volumen "makis-data")
+# Backend Spring Boot de la API de makis (la base de datos está en Neon, en la nube)
+# Levantar:  docker compose up -d --build
+# Apagar:    docker compose down
 services:
-  postgres:
-    image: postgres:17-alpine
-    container_name: makis-db
-    environment:
-      POSTGRES_DB: makisdb
-      POSTGRES_USER: maki
-      POSTGRES_PASSWORD: maki123
+  backend:
+    build: .          # usa el Dockerfile de esta carpeta
+    container_name: makis-backend
+    env_file: .env    # DB_URL, DB_USERNAME y DB_PASSWORD de Neon (ver .env.example)
     ports:
-      - "5434:5432"   # puerto 5434 en tu PC -> 5432 dentro del contenedor
-    volumes:
-      - makis-data:/var/lib/postgresql/data
-
-volumes:
-  makis-data:
+      - "8081:8081"

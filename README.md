@@ -8,14 +8,14 @@
 <p>
   <img src="https://img.shields.io/badge/Java-25-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 25" />
   <img src="https://img.shields.io/badge/Spring_Boot-4.1.2-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
-  <img src="https://img.shields.io/badge/PostgreSQL-17-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/Neon-PostgreSQL-00E599?style=for-the-badge&logo=postgresql&logoColor=white" alt="Neon PostgreSQL" />
+  <img src="https://img.shields.io/badge/Docker-Backend-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/Apps_Script-CRUD-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Apps Script" />
   <img src="https://img.shields.io/badge/Postman-Collection-FF6C37?style=for-the-badge&logo=postman&logoColor=white" alt="Postman" />
 </p>
 
 <p>
-  API REST desarrollada con <b>Spring Boot</b> en capas (<code>Controller -> Service -> Repository -> Model</code>) que guarda los makis en una base de datos <b>PostgreSQL</b> levantada con <b>Docker</b>, y una <b>página web en Google Apps Script</b> que hace el CRUD completo (Crear, Leer, Actualizar, Eliminar) llamando a esa API.
+  API REST desarrollada con <b>Spring Boot</b> en capas (<code>Controller -> Service -> Repository -> Model</code>) que guarda los makis en una base de datos <b>PostgreSQL en la nube (Neon)</b> y se puede ejecutar en un contenedor <b>Docker</b>, y una <b>página web en Google Apps Script</b> que hace el CRUD completo (Crear, Leer, Actualizar, Eliminar) llamando a esa API.
 </p>
 
 </div>
@@ -28,7 +28,7 @@
 Página Apps Script (Index.html)
    │ google.script.run
    ▼
-Code.js (Apps Script) ── UrlFetchApp ──►  Spring Boot /api/makis  ──►  PostgreSQL (Docker)
+Code.js (Apps Script) ── UrlFetchApp ──►  Spring Boot /api/makis  ──►  PostgreSQL (Neon)
 ```
 
 ```text
@@ -39,7 +39,9 @@ pruebaBACKENDJS/
 │   ├── Code.js                          # Servidor: doGet() + funciones CRUD que llaman a la API REST
 │   └── Index.html                       # Página: formulario + tabla de makis
 └── pompompurin/                         # Backend Spring Boot
-    ├── docker-compose.yml               # Base de datos PostgreSQL
+    ├── Dockerfile                       # Imagen Docker del backend (compila y ejecuta el .jar)
+    ├── docker-compose.yml               # Levanta el backend en Docker con los datos de .env
+    ├── .env.example                     # Plantilla de la conexión a Neon (copiar como .env)
     └── src/main/java/com/maki/pompompurin/
         ├── PompompurinApplication.java  # Punto de entrada + carga de 2 makis de ejemplo
         ├── controller/MakiController.java   # Endpoints GET, POST, PUT, DELETE (@RestController)
@@ -98,24 +100,42 @@ Ejemplo de cuerpo JSON para `POST` y `PUT`:
 
 ## <img src="https://api.iconify.design/lucide/terminal.svg?color=%236366f1" width="22" height="22" align="absmiddle" alt="Run" /> Cómo ejecutarlo
 
-### Paso 1: Levantar la base de datos con Docker
+### Paso 1: Crear la base de datos en Neon y el archivo `.env`
+
+1. En [console.neon.tech](https://console.neon.tech) crear un proyecto y pulsar **Connect**. Neon muestra algo así:
+   `postgresql://USUARIO:CLAVE@HOST/neondb?sslmode=require`
+2. En la carpeta `pompompurin`, copiar `.env.example` como `.env` y pasar esos datos (sin comillas):
+
+   ```properties
+   DB_URL=jdbc:postgresql://HOST/neondb?sslmode=require
+   DB_USERNAME=USUARIO
+   DB_PASSWORD=CLAVE
+   ```
+
+El `.env` tiene la clave, por eso está en `.gitignore` y **no se sube a GitHub**. La tabla `makis` no hay que crearla: Hibernate la crea al iniciar.
+
+### Paso 2: Levantar el backend (elige una opción)
+
+**Opción A — con Gradle:**
 
 ```bash
 cd pompompurin
-docker compose up -d
-```
-
-Crea un contenedor `makis-db` con PostgreSQL (base `makisdb`, usuario `maki`, clave `maki123`) en el puerto **5434** de la PC. Los datos se guardan en un volumen, así que no se pierden al reiniciar.
-
-### Paso 2: Levantar Spring Boot
-
-```bash
 ./gradlew bootRun
 ```
 
-Al iniciar, Hibernate crea la tabla `makis` y, si está vacía, inserta 2 makis de ejemplo. La API queda en `http://localhost:8081/api/makis`.
+**Opción B — con Docker** (no necesita Java instalado):
 
-> Los tests (`./gradlew test`) usan una base H2 en memoria, por lo que no necesitan Docker.
+```bash
+cd pompompurin
+docker compose up -d --build     # construye la imagen con el Dockerfile y la ejecuta
+docker compose logs -f backend   # ver los logs (Ctrl+C para salir)
+docker compose down              # apagarlo
+```
+
+En ambos casos, al iniciar, Hibernate crea la tabla `makis` en Neon y, si está vacía, inserta 2 makis de ejemplo. La API queda en `http://localhost:8081/api/makis`.
+
+> Si al arrancar aparece `'url' must start with "jdbc"`, no se encontró el `.env`: debe estar en `pompompurin/` y la app debe ejecutarse desde esa carpeta (`cd pompompurin` y luego `./gradlew bootRun`).
+> Los tests (`./gradlew test`) usan una base H2 en memoria, por lo que no necesitan Neon.
 
 ### Paso 3: Hacer pública la API
 
