@@ -1,126 +1,43 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+  <!-- Apps Script sirve esta página dentro de un iframe de Google; _top evita abrir enlaces encerrados en el iframe -->
   <base target="_top">
   <meta charset="utf-8">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 960px;
-      margin: 20px auto;
-      padding: 0 16px;
-      color: #1f2937;
-    }
-
-    h1 {
-      color: #d97706;
-      margin-bottom: 12px;
-    }
-
-    fieldset {
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      padding: 12px 16px;
-    }
-
-    legend {
-      font-weight: bold;
-    }
-
-    label {
-      display: block;
-      margin: 8px 0 4px;
-      font-size: 14px;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #d1d5db;
-      border-radius: 4px;
-    }
-
-    .fila {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .fila>div {
-      flex: 1;
-      min-width: 140px;
-    }
-
-    button {
-      padding: 8px 14px;
-      border: 0;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 12px 6px 0 0;
-    }
-
-    td button {
-      margin: 2px;
-    }
-
-    .primario {
-      background: #d97706;
-      color: #fff;
-    }
-
-    .secundario {
-      background: #e5e7eb;
-    }
-
-    .peligro {
-      background: #dc2626;
-      color: #fff;
-    }
-
-    .tabla {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 8px;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    th {
-      background: #fef3c7;
-    }
-
-    #mensaje {
-      min-height: 20px;
-      margin: 12px 0;
-      font-weight: bold;
-    }
-
-    .ok {
-      color: #15803d;
-    }
-
-    .error {
-      color: #dc2626;
-    }
+    body { font-family: Arial, sans-serif; max-width: 960px; margin: 20px auto; padding: 0 16px; color: #1f2937; }
+    h1 { color: #d97706; margin-bottom: 12px; }
+    fieldset { border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 16px; padding: 12px 16px; }
+    legend { font-weight: bold; }
+    label { display: block; margin: 8px 0 4px; font-size: 14px; }
+    input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 4px; }
+    .fila { display: flex; gap: 12px; flex-wrap: wrap; }
+    .fila > div { flex: 1; min-width: 140px; }
+    button { padding: 8px 14px; border: 0; border-radius: 4px; cursor: pointer; margin: 12px 6px 0 0; }
+    td button { margin: 2px; }
+    .primario { background: #d97706; color: #fff; }
+    .secundario { background: #e5e7eb; }
+    .peligro { background: #dc2626; color: #fff; }
+    .tabla { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #e5e7eb; padding: 8px; text-align: left; font-size: 14px; }
+    th { background: #fef3c7; }
+    #mensaje { min-height: 20px; margin: 12px 0; font-weight: bold; }
+    .ok { color: #15803d; }
+    .error { color: #dc2626; }
   </style>
 </head>
-
 <body>
   <h1>CRUD de Makis</h1>
 
+  <!--
+    1. FORMULARIO ÚNICO PARA CREAR (POST) Y EDITAR (PUT):
+    - El input oculto "id" decide la operación:
+      * Si "id" está vacío -> estamos creando un maki nuevo (POST /api/makis).
+      * Si "id" tiene valor -> estamos editando ese maki (PUT /api/makis/{id}).
+    - Los id de los inputs ("name", "price", "pieces", "ingredients") coinciden
+      exactamente con los atributos de la entidad Maki.java en el backend.
+  -->
   <form id="formulario" onsubmit="guardar(event)">
     <fieldset>
       <legend id="tituloFormulario">Nuevo maki</legend>
@@ -137,25 +54,48 @@
     </fieldset>
   </form>
 
+  <!-- Zona para mostrar confirmaciones o errores devueltos por el backend -->
   <div id="mensaje"></div>
 
+  <!-- 2. BÚSQUEDA POR ID: consume el endpoint GET /api/makis/{id} del backend -->
+  <form onsubmit="buscarPorId(event)">
+    <fieldset>
+      <legend>Buscar maki por ID</legend>
+      <div class="fila">
+        <div>
+          <label for="buscarId">ID del maki</label>
+          <input id="buscarId" type="number" step="1" min="1" placeholder="Ej. 1">
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+          <button type="submit" class="primario">Buscar</button>
+          <button type="button" class="secundario" onclick="verTodos()">Ver todos</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <!-- 3. TABLA DINÁMICA: se llena con GET /api/makis (todos) o GET /api/makis/{id} (uno) -->
   <div class="tabla">
     <table>
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Precio (S/)</th>
-          <th>Piezas</th>
-          <th>Ingredientes</th>
-          <th>Acciones</th>
-        </tr>
+        <tr><th>ID</th><th>Nombre</th><th>Precio (S/)</th><th>Piezas</th><th>Ingredientes</th><th>Acciones</th></tr>
       </thead>
       <tbody id="tabla"></tbody>
     </table>
   </div>
 
   <script>
+    /*
+     * CONEXIÓN ENTRE INDEX.HTML (NAVEGADOR) Y CODE.GS (SERVIDOR APPS SCRIPT):
+     * En Apps Script no llamamos directo con fetch() desde el navegador; usamos el puente oficial:
+     *
+     *   google.script.run
+     *     .withSuccessHandler(fnExito)   // Recibe el valor retornado por la función de Code.gs
+     *     .withFailureHandler(fnError)   // Recibe el Error si Code.gs hizo "throw new Error(...)"
+     *     .nombreFuncionEnCodeGs(args);  // Ejecuta esa función en Code.gs (que a su vez usa UrlFetchApp hacia Spring Boot)
+     */
+
+    // Atajo para obtener elementos del DOM por su id
     const campo = id => document.getElementById(id);
 
     function mostrarMensaje(texto, esError) {
@@ -167,13 +107,42 @@
       mostrarMensaje(error.message || error, true);
     }
 
+    // ----- READ (todos): pide la lista completa al backend (GET /api/makis) -----
     function listar() {
       google.script.run
-        .withSuccessHandler(pintarTabla)
+        .withSuccessHandler(pintarTabla) // Recibe el List<Maki> ya convertido en arreglo de objetos JS
         .withFailureHandler(mostrarError)
         .listarMakis();
     }
 
+    // ----- READ (por ID): pide un solo maki al backend (GET /api/makis/{id}) -----
+    function buscarPorId(evento) {
+      evento.preventDefault();
+      const id = campo('buscarId').value.trim();
+      if (!id) {
+        verTodos();
+        return;
+      }
+      google.script.run
+        .withSuccessHandler(maki => {
+          mostrarMensaje('Mostrando maki #' + maki.id + '.');
+          pintarTabla([maki]); // Envuelve el objeto único en un arreglo [maki] para reutilizar pintarTabla
+        })
+        .withFailureHandler(error => {
+          pintarTabla([]);     // Limpia la tabla si el ID no existe (404 Not Found)
+          mostrarError(error);
+        })
+        .buscarMakiPorId(id);
+    }
+
+    // Quita el filtro de búsqueda y recarga todos los makis
+    function verTodos() {
+      campo('buscarId').value = '';
+      campo('mensaje').textContent = '';
+      listar();
+    }
+
+    // Recorre los makis recibidos del backend y dibuja las filas <tr> en la tabla
     function pintarTabla(makis) {
       const tbody = campo('tabla');
       tbody.innerHTML = '';
@@ -185,7 +154,7 @@
         const fila = document.createElement('tr');
         [maki.id, maki.name, maki.price.toFixed(2), maki.pieces, maki.ingredients].forEach(valor => {
           const celda = document.createElement('td');
-          celda.textContent = valor;
+          celda.textContent = valor; // textContent escapa texto plano y evita inyección HTML (XSS)
           fila.appendChild(celda);
         });
         const acciones = document.createElement('td');
@@ -204,9 +173,13 @@
       return boton;
     }
 
+    // ----- CREATE (POST) y UPDATE (PUT) desde el mismo formulario -----
     function guardar(evento) {
-      evento.preventDefault();
+      evento.preventDefault(); // Evita que el navegador recargue la página al enviar el <form>
       const id = campo('id').value;
+
+      // Armamos el JSON con los mismos nombres y tipos que espera Maki.java (@RequestBody Maki)
+      // Number(...) convierte el texto del input a número para double price e int pieces
       const maki = {
         name: campo('name').value,
         price: Number(campo('price').value),
@@ -217,9 +190,11 @@
       const alTerminar = () => {
         mostrarMensaje(id ? 'Maki actualizado.' : 'Maki creado.');
         limpiarFormulario();
-        listar();
+        campo('buscarId').value = '';
+        listar(); // Refresca la tabla consultando otra vez GET /api/makis
       };
 
+      // Si hay id oculto -> PUT /api/makis/{id}; si está vacío -> POST /api/makis
       if (id) {
         google.script.run.withSuccessHandler(alTerminar).withFailureHandler(mostrarError).actualizarMaki(id, maki);
       } else {
@@ -227,6 +202,7 @@
       }
     }
 
+    // Carga los datos de la fila seleccionada en el formulario para pasar a modo "Actualizar"
     function editar(maki) {
       ['id', 'name', 'price', 'pieces', 'ingredients'].forEach(nombre => campo(nombre).value = maki[nombre]);
       campo('tituloFormulario').textContent = 'Editando maki #' + maki.id;
@@ -234,6 +210,7 @@
       campo('name').focus();
     }
 
+    // Limpia los inputs y borra el id oculto para volver al modo "Crear"
     function limpiarFormulario() {
       campo('formulario').reset();
       campo('id').value = '';
@@ -241,16 +218,17 @@
       campo('botonGuardar').textContent = 'Crear';
     }
 
+    // ----- DELETE: elimina por id en el backend (DELETE /api/makis/{id}) -----
     function eliminar(maki) {
       if (!confirm('¿Eliminar el maki "' + maki.name + '"?')) return;
       google.script.run
-        .withSuccessHandler(() => { mostrarMensaje('Maki eliminado.'); listar(); })
+        .withSuccessHandler(() => { campo('buscarId').value = ''; mostrarMensaje('Maki eliminado.'); listar(); })
         .withFailureHandler(mostrarError)
         .eliminarMaki(maki.id);
     }
 
+    // Apenas abre la página, pide la lista inicial al backend
     listar();
   </script>
 </body>
-
 </html>

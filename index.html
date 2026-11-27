@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cartas de Evaluación — Pompompurin Maki API &amp; Postman</title>
+  <style>
+    :root {
+      --bg: #0b101b;
+      --bg-elevated: #111827;
+      --card: #151e30;
+      --card-2: #1b253b;
+      --border: #28354f;
+      --border-strong: #3a4c70;
+      --text: #eef2ff;
+      --muted: #94a3b8;
+      --dim: #64748b;
+
+      --accent: #f59e0b;
+      --accent-soft: rgba(245, 158, 11, 0.14);
+      --spring: #6db33f;
+      --spring-soft: rgba(109, 179, 63, 0.15);
+      --postman: #ff6c37;
+      --postman-soft: rgba(255, 108, 55, 0.16);
+      --blue: #38bdf8;
+      --blue-soft: rgba(56, 189, 248, 0.15);
+      --ok: #22c55e;
+      --ok-soft: rgba(34, 197, 94, 0.15);
+      --bad: #ef4444;
+      --bad-soft: rgba(239, 68, 68, 0.15);
+
+      --code-bg: #0d1322;
+      --code-line: #4b5c7d;
+      --code-kw: #c084fc;
+      --code-type: #38bdf8;
+      --code-ann: #fbbf24;
+      --code-str: #86efac;
+      --code-num: #fb923c;
+      --code-com: #64748b;
+
+      --pm-bg: #1c1c1c;
+      --pm-panel: #232323;
+      --pm-input: #2b2b2b;
+      --pm-border: #383838;
+      --pm-text: #ececec;
+      --pm-muted: #9b9b9b;
+
+      --shadow: 0 22px 50px rgba(0, 0, 0, 0.45);
+      --radius: 18px;
+      --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", Consolas, monospace;
+    }
+
+    html[data-theme="light"] {
+      --bg: #f4f6fb;
+      --bg-elevated: #ffffff;
+      --card: #ffffff;
+      --card-2: #f8fafc;
+      --border: #dce3f0;
+      --border-strong: #bac6dc;
+      --text: #0f172a;
+      --muted: #475569;
+      --dim: #64748b;
+
+      --accent: #d97706;
+      --accent-soft: rgba(217, 119, 6, 0.12);
+      --spring: #4d8b28;
+      --spring-soft: rgba(77, 139, 40, 0.12);
+      --postman: #e85826;
+      --postman-soft: rgba(232, 88, 38, 0.12);
+      --blue: #0284c7;
+      --blue-soft: rgba(2, 132, 199, 0.12);
+      --ok: #16a34a;
+      --ok-soft: rgba(22, 163, 74, 0.12);
+      --bad: #dc2626;
+      --bad-soft: rgba(220, 38, 38, 0.12);
+
+      --code-bg: #131926;
+      --pm-bg: #1f1f22;
+      --pm-panel: #27272b;
+      --pm-input: #303036;
+      --pm-border: #3f3f46;
+
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      background:
+        radial-gradient(900px 500px at 10% -10%, rgba(245, 158, 11, 0.11), transparent 60%),
+        radial-gradient(800px 450px at 95% 0%, rgba(56, 189, 248, 0.09), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 20px 16px 40px;
+    }
+
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Header & Toolbar */
+    .topbar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #ea580c);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-pill.ok { border-color: rgba(34, 197, 94, 0.4); color: var(--ok); background: var(--ok-soft); }
+    .stat-pill.streak { border-color: rgba(245, 158, 11, 0.4); color: var(--accent); background: var(--accent-soft); }
+
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .filter-group, .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    button:active:not(:disabled) { transform: translateY(0); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .chip.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .mode-switch button {
+      border: none;
+      background: transparent;
+      padding: 6px 11px;
+      border-radius: 8px;
+      color: var(--muted);
+    }
+
+    .mode-switch button.active {
+      background: var(--accent);
+      color: #111827;
+      font-weight: 700;
+    }
+
+    /* Progress Bar */
+    .progress-wrap {
+      width: 100%;
+      height: 7px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--spring));
+      transition: width 0.3s ease;
+    }
+
+    /* Main Flashcard / Quiz Card */
+    .study-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      padding: 14px 20px;
+      background: var(--card-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-code { background: var(--blue-soft); color: var(--blue); border: 1px solid rgba(56, 189, 248, 0.35); }
+    .badge-postman { background: var(--postman-soft); color: var(--postman); border: 1px solid rgba(255, 108, 55, 0.38); }
+    .badge-arch { background: var(--spring-soft); color: var(--spring); border: 1px solid rgba(109, 179, 63, 0.38); }
+    .badge-diff { background: var(--bg-elevated); color: var(--muted); border: 1px solid var(--border); }
+    .badge-status-ok { background: var(--ok-soft); color: var(--ok); border: 1px solid rgba(34, 197, 94, 0.4); }
+    .badge-status-bad { background: var(--bad-soft); color: var(--bad); border: 1px solid rgba(239, 68, 68, 0.4); }
+
+    .card-counter {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 0;
+    }
+
+    @media (max-width: 920px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .evidence-pane {
+      padding: 20px;
+      border-right: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.14);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    @media (max-width: 920px) {
+      .evidence-pane {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    .evidence-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+      flex-wrap: wrap;
+    }
+
+    .pointer-legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* IDE Code Block */
+    .ide-window {
+      background: var(--code-bg);
+      border: 1px solid #26334d;
+      border-radius: 14px;
+      overflow: hidden;
+      color: #e2e8f0;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .ide-titlebar {
+      background: #141c2f;
+      border-bottom: 1px solid #23304a;
+      padding: 8px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: #94a3b8;
+    }
+
+    .window-dots {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot.r { background: #ef4444; }
+    .dot.y { background: #f59e0b; }
+    .dot.g { background: #22c55e; }
+
+    .code-body {
+      padding: 10px 0;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .code-line {
+      display: flex;
+      align-items: baseline;
+      padding: 1px 14px 1px 10px;
+      white-space: pre;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .code-line.focused {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.22), rgba(245, 158, 11, 0.05));
+      border-left-color: #f59e0b;
+    }
+
+    .ln {
+      width: 34px;
+      flex-shrink: 0;
+      text-align: right;
+      padding-right: 12px;
+      color: var(--code-line);
+      user-select: none;
+      font-size: 0.74rem;
+    }
+
+    .code-line.focused .ln {
+      color: #fbbf24;
+      font-weight: 700;
+    }
+
+    .code-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .line-pointer {
+      margin-left: 14px;
+      background: #f59e0b;
+      color: #111827;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 1px 8px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .tok-com { color: var(--code-com); font-style: italic; }
+    .tok-str { color: var(--code-str); }
+    .tok-ann { color: var(--code-ann); font-weight: 600; }
+    .tok-kw  { color: var(--code-kw); font-weight: 600; }
+    .tok-type { color: var(--code-type); }
+    .tok-num { color: var(--code-num); }
+    .tok-key { color: #7dd3fc; }
+
+    /* Postman UI Simulator */
+    .postman-ui {
+      background: var(--pm-bg);
+      border: 1px solid var(--pm-border);
+      border-radius: 14px;
+      overflow: hidden;
+      color: var(--pm-text);
+      font-size: 0.8rem;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.42);
+    }
+
+    .pm-topbar {
+      background: #161618;
+      border-bottom: 1px solid var(--pm-border);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.74rem;
+      color: var(--pm-muted);
+    }
+
+    .pm-crumb {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pm-logo {
+      color: #ff6c37;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .pm-req-name {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .pm-request-bar {
+      padding: 10px 12px;
+      background: var(--pm-panel);
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      border-bottom: 1px solid var(--pm-border);
+    }
+
+    .pm-url-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: var(--pm-input);
+      border: 1px solid var(--pm-border);
+      border-radius: 8px;
+      overflow: visible;
+      min-width: 0;
+    }
+
+    .pm-method {
+      padding: 7px 11px;
+      font-weight: 800;
+      font-size: 0.76rem;
+      border-right: 1px solid var(--pm-border);
+      letter-spacing: 0.03em;
+      flex-shrink: 0;
+    }
+    .pm-method.GET { color: #34d399; }
+    .pm-method.POST { color: #fbbf24; }
+    .pm-method.PUT { color: #60a5fa; }
+    .pm-method.DELETE { color: #f87171; }
+
+    .pm-url {
+      padding: 7px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: #f3f4f6;
+      white-space: nowrap;
+      overflow-x: auto;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .pm-var {
+      color: #fb923c;
+      background: rgba(251, 146, 60, 0.14);
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .pm-send {
+      background: #097bed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0 16px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .pm-tabs {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 14px;
+      background: var(--pm-panel);
+      border-bottom: 1px solid var(--pm-border);
+      font-size: 0.75rem;
+      overflow-x: auto;
+    }
+
+    .pm-tab {
+      padding: 8px 2px;
+      color: var(--pm-muted);
+      border-bottom: 2px solid transparent;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+    }
+
+    .pm-tab:hover { transform: none; color: #fff; }
+    .pm-tab.active {
+      color: #fff;
+      border-bottom-color: #ff6c37;
+    }
+
+    .pm-dot-ind {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    .pm-subbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 14px;
+      background: #1f1f22;
+      border-bottom: 1px solid var(--pm-border);
+      font-size: 0.72rem;
+      color: var(--pm-muted);
+    }
+
+    .pm-radio {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pm-radio-circle {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 2px solid #6b7280;
+      display: inline-block;
+    }
+
+    .pm-radio.selected {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .pm-radio.selected .pm-radio-circle {
+      border-color: #ff6c37;
+      background: radial-gradient(#ff6c37 45%, transparent 50%);
+    }
+
+    .pm-lang-pill {
+      background: var(--pm-input);
+      border: 1px solid var(--pm-border);
+      color: #60a5fa;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+    }
+
+    .pm-body-editor {
+      background: #19191b;
+      padding: 8px 0;
+      font-family: var(--font-mono);
+      font-size: 0.77rem;
+      line-height: 1.55;
+      overflow-x: auto;
+    }
+
+    .pm-headers-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      background: #19191b;
+    }
+
+    .pm-headers-table th, .pm-headers-table td {
+      border-bottom: 1px solid var(--pm-border);
+      border-right: 1px solid var(--pm-border);
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .pm-headers-table th {
+      color: var(--pm-muted);
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .pm-response {
+      border-top: 2px solid var(--pm-border);
+      background: #18181a;
+    }
+
+    .pm-res-bar {
+      padding: 7px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid var(--pm-border);
+      font-size: 0.73rem;
+    }
+
+    .pm-res-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pm-status {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .pm-status.s2xx { background: rgba(34, 197, 94, 0.18); color: #4ade80; }
+    .pm-status.s4xx { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .pm-status.pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+    /* Highlight ring for Postman targeted UI element */
+    .pm-target {
+      outline: 2px dashed #f59e0b;
+      outline-offset: 2px;
+      border-radius: 6px;
+      background: rgba(245, 158, 11, 0.12) !important;
+      position: relative;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.16);
+    }
+
+    .pm-callout-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f59e0b;
+      color: #111827;
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: 999px;
+      margin-left: 6px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    /* Question & Answer Pane */
+    .qa-pane {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: space-between;
+    }
+
+    .question-text {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+    }
+
+    .question-text code, .explanation-box code, .option-btn code, .evidence-label code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: rgba(148, 163, 184, 0.16);
+      padding: 1px 5px;
+      border-radius: 5px;
+      color: var(--blue);
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 11px 13px;
+      border-radius: 12px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .option-key {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 0.76rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+      color: var(--muted);
+    }
+
+    .option-btn.correct {
+      background: var(--ok-soft);
+      border-color: var(--ok);
+    }
+    .option-btn.correct .option-key {
+      background: var(--ok);
+      border-color: var(--ok);
+      color: #fff;
+    }
+
+    .option-btn.wrong {
+      background: var(--bad-soft);
+      border-color: var(--bad);
+    }
+    .option-btn.wrong .option-key {
+      background: var(--bad);
+      border-color: var(--bad);
+      color: #fff;
+    }
+
+    /* Flashcard Flip Mode */
+    .flashcard-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ea580c);
+      color: #111827;
+      border: none;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      border-radius: 12px;
+    }
+
+    .self-grade-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-ok {
+      background: var(--ok-soft);
+      border-color: var(--ok);
+      color: var(--ok);
+      padding: 10px 12px;
+    }
+
+    .btn-bad {
+      background: var(--bad-soft);
+      border-color: var(--bad);
+      color: var(--bad);
+      padding: 10px 12px;
+    }
+
+    /* Explanation Box (Card Back) */
+    .explanation-box {
+      border-radius: 13px;
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      background: var(--card-2);
+      font-size: 0.86rem;
+      line-height: 1.5;
+      display: none;
+      animation: fadeSlide 0.2s ease;
+    }
+
+    .explanation-box.visible { display: block; }
+    .explanation-box.state-ok { border-color: rgba(34, 197, 94, 0.45); background: var(--ok-soft); }
+    .explanation-box.state-bad { border-color: rgba(239, 68, 68, 0.45); background: var(--bad-soft); }
+    .explanation-box.state-info { border-color: rgba(245, 158, 11, 0.45); background: var(--accent-soft); }
+
+    .exp-title {
+      font-weight: 800;
+      font-size: 0.84rem;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .exp-ref {
+      margin-top: 8px;
+      padding-top: 7px;
+      border-top: 1px dashed var(--border-strong);
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom Deck Navigation */
+    .deck-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+    }
+
+    .deck-dots {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .deck-num {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .deck-num.current {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .deck-num.done-ok {
+      background: var(--ok-soft);
+      border-color: var(--ok);
+      color: var(--ok);
+    }
+
+    .deck-num.done-bad {
+      background: var(--bad-soft);
+      border-color: var(--bad);
+      color: var(--bad);
+    }
+
+    .kbd-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--dim);
+    }
+
+    kbd {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 1px 5px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    /* Summary Banner */
+    .summary-panel {
+      background: var(--card);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary-panel.visible { display: flex; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .sum-box {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .sum-box small { color: var(--muted); display: block; font-size: 0.76rem; }
+    .sum-box strong { font-size: 1.25rem; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">🍣</div>
+        <div>
+          <h1>Cartas de Evaluación: Pompompurin Maki API</h1>
+          <p>Spring Boot 4 · Arquitectura en Capas · Java Records · Simulador UI de Postman</p>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <span class="stat-pill" id="stat-progress">0 / 16 respondidas</span>
+        <span class="stat-pill ok" id="stat-score">✓ 0 aciertos</span>
+        <span class="stat-pill streak" id="stat-streak">🔥 Racha: 0</span>
+        <button id="btn-theme" title="Cambiar tema claro/oscuro">🌓 Tema</button>
+      </div>
+    </header>
+
+    <div class="progress-wrap" aria-label="Progreso de evaluación">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <section class="controls-bar">
+      <div class="filter-group" id="filter-group">
+        <button class="chip active" data-filter="all" id="chip-all">Todas (16)</button>
+        <button class="chip" data-filter="code" id="chip-code">💻 Código Java &amp; Spring</button>
+        <button class="chip" data-filter="postman" id="chip-postman">🚀 UI Postman</button>
+        <button class="chip" data-filter="arch" id="chip-arch">🧱 Arquitectura &amp; Despliegue</button>
+        <button class="chip" data-filter="missed" id="btn-filter-missed" disabled>↻ Por repasar (0)</button>
+      </div>
+
+      <div class="action-group">
+        <div class="mode-switch" role="group" aria-label="Modo de estudio">
+          <button id="mode-quiz" class="active">Modo Quiz</button>
+          <button id="mode-flash">Modo Flashcard</button>
+        </div>
+        <button id="btn-shuffle" title="Mezclar el orden de las cartas">🔀 Mezclar</button>
+        <button id="btn-summary" title="Ver resumen de resultados">📊 Resumen</button>
+        <button id="btn-reset" title="Reiniciar progreso">↺ Reiniciar</button>
+      </div>
+    </section>
+
+    <section class="summary-panel" id="summary-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div>
+          <h2 style="margin:0; font-size:1.1rem;" id="summary-title">Resultado de Evaluación</h2>
+          <p style="margin:2px 0 0; color:var(--muted); font-size:0.84rem;" id="summary-subtitle"></p>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button id="btn-review-missed" class="btn-primary" style="padding:8px 14px; font-size:0.82rem;">Repasar falladas</button>
+          <button id="btn-close-summary">Cerrar</button>
+        </div>
+      </div>
+      <div class="summary-grid" id="summary-grid"></div>
+    </section>
+
+    <article class="study-card" id="study-card">
+      <div class="card-header">
+        <div class="card-badges" id="card-badges"></div>
+        <div class="card-counter" id="card-counter">Carta 1 / 16</div>
+      </div>
+
+      <div class="card-grid">
+        <div class="evidence-pane" id="evidence-pane"></div>
+        <div class="qa-pane" id="qa-pane"></div>
+      </div>
+    </article>
+
+    <nav class="deck-footer" aria-label="Navegación de cartas">
+      <button id="btn-prev">← Anterior</button>
+      <div class="deck-dots" id="deck-dots"></div>
+      <button id="btn-next">Siguiente →</button>
+    </nav>
+
+    <p class="kbd-hint">
+      Atajos: <kbd>1</kbd>–<kbd>4</kbd> responder opción · <kbd>Espacio</kbd> voltear carta (Modo Flashcard) · <kbd>←</kbd> <kbd>→</kbd> navegar
+    </p>
+  </main>
+
+  <script>
+    const CARDS = [
+      {
+        id: 1,
+        category: "code",
+        categoryLabel: "💻 Código: MakiController.java",
+        difficulty: "Básico",
+        type: "code",
+        file: "pompompurin/.../controller/MakiController.java",
+        startLine: 16,
+        focusLines: [16, 17, 27],
+        pointerText: "❓ Ruta + Anotación",
+        code: `@RestController
+@RequestMapping("/api/makis")
+public class MakiController {
+
+    private final MakiService makiService;
+
+    public MakiController(MakiService makiService) {
+        this.makiService = makiService;
+    }
+
+    @GetMapping
+    public List<Maki> listAll() {
+        return makiService.listAll();
+    }
+}`,
+        question: "Con <code>@RequestMapping(\"/api/makis\")</code> en la clase y <code>@GetMapping</code> sin ruta en <code>listAll()</code>, ¿qué hace Spring Boot cuando llega una petición HTTP?",
+        options: [
+          "Busca una plantilla HTML llamada <code>listAll.html</code> dentro de <code>src/main/resources/templates/</code>.",
+          "Atiende <code>GET /api/makis</code> y serializa automáticamente la <code>List&lt;Maki&gt;</code> a un JSON Array gracias a <code>@RestController</code>.",
+          "Expone el endpoint en <code>GET /api/makis/listAll</code> usando el nombre del método como ruta.",
+          "Solo acepta peticiones si llevan un parámetro <code>?list=all</code> en la URL."
+        ],
+        correctIndex: 1,
+        answerShort: "Responde a GET /api/makis devolviendo JSON automáticamente.",
+        explanation: "<code>@RequestMapping(\"/api/makis\")</code> define el prefijo base del controlador y <code>@GetMapping</code> hereda esa ruta exacta. Al usar <code>@RestController</code> (que combina <code>@Controller</code> + <code>@ResponseBody</code>), Spring convierte la lista Java directamente a JSON.",
+        ref: "MakiController.java · líneas 16–31"
+      },
+      {
+        id: 2,
+        category: "code",
+        categoryLabel: "💻 Código: MakiController.java",
+        difficulty: "Intermedio",
+        type: "code",
+        file: "pompompurin/.../controller/MakiController.java",
+        startLine: 20,
+        focusLines: [20, 23, 24],
+        pointerText: "❓ Sin 'new' ni @Autowired",
+        code: `    private final MakiService makiService;
+
+    // Inyección de dependencias por constructor
+    public MakiController(MakiService makiService) {
+        this.makiService = makiService;
+    }`,
+        question: "En <code>MakiController</code> nunca escribimos <code>new MakiService()</code> ni <code>@Autowired</code>. ¿Cómo llega una instancia real a <code>this.makiService</code>?",
+        options: [
+          "Java crea automáticamente cualquier campo marcado como <code>private final</code> al compilar.",
+          "Si no pones <code>@Autowired</code>, <code>makiService</code> vale <code>null</code> hasta la primera petición POST.",
+          "Spring detecta <code>@Service</code> en <code>MakiService</code> y, al haber un único constructor en el controlador, inyecta el bean automáticamente.",
+          "Gradle genera una clase hija con <code>new MakiService()</code> dentro de <code>build.gradle</code>."
+        ],
+        correctIndex: 2,
+        answerShort: "Spring inyecta el Bean (@Service) automáticamente por constructor.",
+        explanation: "Desde Spring 4.3+, si una clase gestionada por Spring (como <code>@RestController</code>) tiene un solo constructor, <code>@Autowired</code> es implícito. Spring busca el bean anotado con <code>@Service</code> y lo pasa como argumento.",
+        ref: "MakiController.java · líneas 20–25 & MakiService.java · línea 9"
+      },
+      {
+        id: 3,
+        category: "code",
+        categoryLabel: "💻 Código: MakiController.java",
+        difficulty: "Intermedio",
+        type: "code",
+        file: "pompompurin/.../controller/MakiController.java",
+        startLine: 34,
+        focusLines: [35, 36],
+        pointerText: "❓ Si id = 99 no existe",
+        code: `    @GetMapping("/{id}")
+    public ResponseEntity<Maki> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.of(makiService.findById(id));
+    }`,
+        question: "Si un cliente solicita <code>GET /api/makis/99</code> y <code>makiService.findById(99L)</code> devuelve <code>Optional.empty()</code>, ¿qué respuesta HTTP genera la línea señalada?",
+        options: [
+          "Un código <code>404 Not Found</code> sin cuerpo JSON.",
+          "Un código <code>200 OK</code> con el texto literal <code>\"empty\"</code>.",
+          "Un error <code>500 Internal Server Error</code> por devolver vacío.",
+          "Un código <code>204 No Content</code> devolviendo el primer maki por defecto."
+        ],
+        correctIndex: 0,
+        answerShort: "Devuelve 404 Not Found cuando el Optional está vacío.",
+        explanation: "<code>ResponseEntity.of(Optional&lt;T&gt;)</code> es un helper estándar de Spring: si el <code>Optional</code> trae un objeto devuelve <code>200 OK</code> con ese objeto; si viene vacío (<code>Optional.empty()</code>), responde <code>404 Not Found</code>.",
+        ref: "MakiController.java · líneas 34–37"
+      },
+      {
+        id: 4,
+        category: "code",
+        categoryLabel: "💻 Código: MakiController.java",
+        difficulty: "Intermedio",
+        type: "code",
+        file: "pompompurin/.../controller/MakiController.java",
+        startLine: 40,
+        focusLines: [41],
+        pointerText: "❓ ¿Si borramos esta línea?",
+        code: `    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Maki create(@RequestBody Maki maki) {
+        return makiService.create(maki);
+    }`,
+        question: "¿Qué cambiaría exactamente en el comportamiento de <code>POST /api/makis</code> si eliminaras la anotación <code>@ResponseStatus(HttpStatus.CREATED)</code>?",
+        options: [
+          "Spring bloquearía el <code>@RequestBody</code> y devolvería <code>400 Bad Request</code>.",
+          "El maki se guardaría sin autogenerar el <code>id</code> en <code>MakiService</code>.",
+          "El endpoint dejaría de aceptar JSON y pasaría a aceptar solo formularios.",
+          "El maki seguiría creándose igual, pero Spring respondería con estado <code>200 OK</code> en vez de <code>201 Created</code>."
+        ],
+        correctIndex: 3,
+        answerShort: "Seguiría funcionando, pero respondería 200 OK en lugar de 201 Created.",
+        explanation: "Por defecto, un método en <code>@RestController</code> que retorna un objeto devuelve código HTTP <code>200 OK</code>. <code>@ResponseStatus(HttpStatus.CREATED)</code> cambia ese código a <code>201 Created</code> para seguir la semántica REST de creación.",
+        ref: "MakiController.java · líneas 40–44"
+      },
+      {
+        id: 5,
+        category: "code",
+        categoryLabel: "💻 Código: Maki.java & MakiService.java",
+        difficulty: "Básico",
+        type: "code",
+        file: "pompompurin/.../model/Maki.java",
+        startLine: 1,
+        focusLines: [3, 9],
+        pointerText: "❓ record + maki.name()",
+        code: `package com.maki.pompompurin.model;
+
+public record Maki(Long id, String name, double price, int pieces, String ingredients) {
+}
+
+// Más adelante, en MakiService.java:
+Maki nuevo = new Maki(
+    nextId++,
+    maki.name(), maki.price(), maki.pieces(), maki.ingredients()
+);`,
+        question: "<code>Maki</code> está definido como <code>record</code> en lugar de <code>class</code>. ¿Por qué en <code>MakiService</code> se escribe <code>maki.name()</code> en vez de <code>maki.getName()</code>?",
+        options: [
+          "Porque <code>name()</code> es un método especial exclusivo de Spring Boot WebMVC.",
+          "Porque un Java <code>record</code> es inmutable y genera getters con el nombre exacto del campo (sin prefijo <code>get</code>), además de constructor, <code>equals</code>, <code>hashCode</code> y <code>toString</code>.",
+          "Porque en Java 25 todas las clases eliminaron el prefijo <code>get</code> automáticamente.",
+          "Porque los <code>record</code> permiten mutar cada campo usando <code>maki.name(\"nuevo\")</code>."
+        ],
+        correctIndex: 1,
+        answerShort: "Los records son inmutables y sus getters llevan el nombre exacto del campo.",
+        explanation: "Un <code>record</code> de Java reduce código repetitivo: sus campos son <code>private final</code> (no hay setters) y los métodos de lectura se llaman exactamente <code>id()</code>, <code>name()</code>, <code>price()</code>, <code>pieces()</code> e <code>ingredients()</code>.",
+        ref: "Maki.java · línea 4 & MakiService.java · línea 36"
+      },
+      {
+        id: 6,
+        category: "code",
+        categoryLabel: "💻 Código: MakiService.java",
+        difficulty: "Básico",
+        type: "code",
+        file: "pompompurin/.../service/MakiService.java",
+        startLine: 13,
+        focusLines: [13, 14, 17, 18],
+        pointerText: "❓ Estado inicial + reinicio",
+        code: `    private final List<Maki> makis = new ArrayList<>();
+    private long nextId = 1;
+
+    public MakiService() {
+        create(new Maki(null, "Acevichado", 25.0, 10, "Langostino, palta, salsa acevichada"));
+        create(new Maki(null, "Furai", 22.0, 10, "Langostino empanizado, queso crema"));
+    }`,
+        question: "Al arrancar la aplicación con <code>./gradlew bootRun</code>, ¿cuántos makis ya existen antes de hacer cualquier POST? ¿Y qué pasa con los nuevos si reinicias el servidor?",
+        options: [
+          "Empieza vacío con 0 makis hasta que llames al primer <code>GET /api/makis</code>.",
+          "Ya existen 2 makis, y los nuevos quedan guardados automáticamente en <code>endpoints.json</code>.",
+          "Ya existen 2 makis (<code>id: 1</code> y <code>2</code>), y cualquier maki creado luego desaparece al reiniciar porque <code>ArrayList</code> vive solo en memoria RAM.",
+          "El primer maki precargado recibe <code>id: null</code> y el segundo recibe <code>id: 1</code>."
+        ],
+        correctIndex: 2,
+        answerShort: "Inicia con 2 makis (id 1 y 2) en RAM; al reiniciar se borran los nuevos.",
+        explanation: "El constructor de <code>MakiService</code> llama a <code>create(...)</code> dos veces al crear el bean: \"Acevichado\" recibe <code>1</code> y \"Furai\" recibe <code>2</code>. Como no hay base de datos en disco, apagar la app limpia el <code>ArrayList</code>.",
+        ref: "MakiService.java · líneas 13–19"
+      },
+      {
+        id: 7,
+        category: "code",
+        categoryLabel: "💻 Código: Maki.java & MakiService.java",
+        difficulty: "Trampa común",
+        type: "code",
+        file: "pompompurin/.../service/MakiService.java",
+        startLine: 25,
+        focusLines: [25, 27, 34],
+        pointerText: "❓ ¿Por qué Long y no long?",
+        code: `    public Optional<Maki> findById(Long id) {
+        for (Maki maki : makis) {
+            if (maki.id().equals(id)) {
+                return Optional.of(maki);
+            }
+        }
+        return Optional.empty();
+    }
+
+    // En Maki.java: public record Maki(Long id, String name, double price, int pieces, String ingredients)`,
+        question: "¿Por qué el campo <code>id</code> del <code>record Maki</code> usa la clase envoltorio <code>Long</code> (mayúscula) en vez del primitivo <code>long</code> (minúscula)?",
+        options: [
+          "Porque <code>Long</code> permite representar ausencia de ID con <code>null</code> (cuando el cliente aún no tiene ID al hacer POST) y ofrece métodos como <code>.equals(id)</code>.",
+          "Porque JSON no soporta números enteros de 64 bits con <code>long</code> minúscula.",
+          "Porque <code>Spring Boot</code> prohíbe usar tipos primitivos como <code>double</code> o <code>int</code> dentro de un <code>record</code>.",
+          "Porque <code>Long</code> convierte automáticamente el número a texto <code>String</code> en la respuesta."
+        ],
+        correctIndex: 0,
+        answerShort: "Long admite null en peticiones entrantes y soporta .equals().",
+        explanation: "Cuando el cliente envía un POST sin campo <code>id</code> (o el constructor interno pasa <code>new Maki(null, ...)</code>), <code>Long</code> puede valer <code>null</code> sin inventar un <code>0</code> ficticio; en cambio, <code>price</code> y <code>pieces</code> sí usan <code>double</code> e <code>int</code>.",
+        ref: "Maki.java · línea 4 & MakiService.java · líneas 17, 25–28"
+      },
+      {
+        id: 8,
+        category: "arch",
+        categoryLabel: "🧱 Arquitectura: Demo vs Pompompurin",
+        difficulty: "Intermedio",
+        type: "code",
+        file: "demo/.../ControllerDemo.java  vs  pompompurin",
+        startLine: 1,
+        focusLines: [5, 8, 9],
+        pointerText: "❓ Contraste con pompompurin",
+        code: `// En demo/ControllerDemo.java:
+@RestController
+public class ControllerDemo {
+    @GetMapping("/producto/{id}")
+    public Map<String,Object> consultarProducto(@PathVariable(name="id") int id) { ... }
+
+    @PostMapping("/productos/nuevo")
+    public Map<String,Object> registrarProducto(@RequestBody Map<String,Object> nuevo) {
+        Date ahora = new Date();
+        nuevo.put("id", ahora.getTime());
+        return nuevo;
+    }
+}`,
+        question: "Comparado con <code>ControllerDemo</code> (donde todo está en el controlador usando <code>Map&lt;String, Object&gt;</code>), ¿qué mejora aporta la arquitectura de <code>pompompurin</code>?",
+        options: [
+          "Permite ejecutar el servidor sin necesidad de tener Java instalado.",
+          "Evita usar anotaciones de Spring como <code>@GetMapping</code> y <code>@PostMapping</code>.",
+          "Hace que el controlador genere IDs basados en la hora actual (<code>ahora.getTime()</code>).",
+          "Separa responsabilidades (Controller HTTP → Service negocio → Record tipado) y valida una estructura fija de 5 campos en lugar de aceptar cualquier mapa libre."
+        ],
+        correctIndex: 3,
+        answerShort: "Separa capas (Controller/Service/Model) y tipa el contrato con Maki.",
+        explanation: "<code>ControllerDemo</code> mezcla lógica, generación de ID por timestamp y un <code>Map</code> sin esquema fijo. En <code>pompompurin</code>, el Controller solo gestiona HTTP, <code>MakiService</code> maneja la lista y <code>record Maki</code> define exactamente los 5 atributos.",
+        ref: "ControllerDemo.java · líneas 13–29 & README.md · líneas 24–44"
+      },
+      {
+        id: 9,
+        category: "postman",
+        categoryLabel: "🚀 Postman UI: Variables de Colección",
+        difficulty: "Básico",
+        type: "postman",
+        postman: {
+          collection: "Pompompurin Maki API",
+          reqName: "1. Listar todos los makis (GET)",
+          method: "GET",
+          urlParts: [
+            { text: "{{baseUrl}}", isVar: true, target: true, callout: "❓ Variable" },
+            { text: "/api/makis" }
+          ],
+          activeTab: "Headers",
+          headersCount: 1,
+          headers: [{ key: "Accept", value: "application/json" }],
+          bodyMode: "none",
+          showResponse: true,
+          response: {
+            status: "200 OK",
+            statusClass: "s2xx",
+            time: "14 ms",
+            size: "238 B",
+            body: `[\n  { "id": 1, "name": "Acevichado", "price": 25.0, "pieces": 10, "ingredients": "Langostino, palta, salsa acevichada" },\n  { "id": 2, "name": "Furai", "price": 22.0, "pieces": 10, "ingredients": "Langostino empanizado, queso crema" }\n]`
+          }
+        },
+        question: "Fíjate en <code>{{baseUrl}}</code> señalado en la barra de URL de Postman. Según <code>endpoints.json</code> y la guía de Codespaces, ¿qué valor guarda y qué detalle debes cuidar al cambiarlo?",
+        options: [
+          "Es una palabra reservada de Postman que siempre apunta a producción aunque no exista la colección.",
+          "Por defecto vale <code>http://localhost:8080</code>; en Codespaces se reemplaza por la URL pública del puerto 8080 <strong>sin barra <code>/</code> al final</strong>.",
+          "Debe terminar obligatoriamente en <code>/api/makis/</code> para que Postman no dé 404.",
+          "Representa el nombre del archivo <code>MakiController.java</code> en tu PC."
+        ],
+        correctIndex: 1,
+        answerShort: "Vale http://localhost:8080; en Codespaces se cambia sin '/' final.",
+        explanation: "En <code>endpoints.json</code>, <code>baseUrl</code> está definida como variable de colección con valor <code>http://localhost:8080</code>. Si al pegarle tu URL de Codespaces dejaras una barra final, Postman enviaría <code>...github.dev//api/makis</code>.",
+        ref: "endpoints.json · líneas 8–13 & README.md · línea 166"
+      },
+      {
+        id: 10,
+        category: "postman",
+        categoryLabel: "🚀 Postman UI: Body raw + JSON",
+        difficulty: "Intermedio",
+        type: "postman",
+        postman: {
+          collection: "Pompompurin Maki API",
+          reqName: "3. Crear maki California (POST)",
+          method: "POST",
+          urlParts: [
+            { text: "{{baseUrl}}", isVar: true },
+            { text: "/api/makis" }
+          ],
+          activeTab: "Body",
+          hasBodyDot: true,
+          headersCount: 1,
+          headersMasked: [{ key: "Auto-Header", value: "??? (depende del selector Body → raw)" }],
+          headers: [{ key: "Content-Type", value: "application/json" }],
+          bodyMode: "raw",
+          bodyLang: "JSON",
+          targetZone: "bodyLang",
+          bodyCallout: "❓ Si estuviera en 'Text'",
+          bodyLines: [
+            `{`,
+            `  "name": "California",`,
+            `  "price": 20.5,`,
+            `  "pieces": 8,`,
+            `  "ingredients": "Kanikama, palta, pepino"`,
+            `}`
+          ],
+          showResponse: false
+        },
+        question: "En la pestaña <strong>Body → raw</strong> de Postman ves el selector <code>JSON ▾</code> señalado. ¿Qué header envía gracias a esa opción, y qué código HTTP recibirías si por descuido lo dejaras en <code>Text</code>?",
+        options: [
+          "Envía <code>Accept: text/html</code>; si quedara en <code>Text</code>, Spring lo guardaría igual como <code>201 Created</code>.",
+          "Solo cambia el color del texto en Postman y no afecta para nada a la petición HTTP real.",
+          "Envía <code>Content-Type: application/json</code>; si quedara en <code>Text</code> (<code>text/plain</code>), Spring Boot respondería <code>415 Unsupported Media Type</code>.",
+          "Cambia el verbo HTTP de <code>POST</code> a <code>PUT</code> automáticamente."
+        ],
+        correctIndex: 2,
+        answerShort: "Agrega Content-Type: application/json; en 'Text' Spring da 415.",
+        explanation: "Seleccionar <code>JSON</code> en Postman añade el header <code>Content-Type: application/json</code>, necesario para que el conversor JSON (Jackson) parsee el <code>@RequestBody Maki</code>. Si se envía como <code>text/plain</code>, Spring rechaza el formato con <code>415 Unsupported Media Type</code>.",
+        ref: "endpoints.json · líneas 71–86 & MakiController.java · línea 42"
+      },
+      {
+        id: 11,
+        category: "postman",
+        categoryLabel: "🚀 Postman UI: Body POST con 'id'",
+        difficulty: "Trampa común",
+        type: "postman",
+        postman: {
+          collection: "Pompompurin Maki API",
+          reqName: "Prueba manual (POST)",
+          method: "POST",
+          urlParts: [
+            { text: "{{baseUrl}}", isVar: true },
+            { text: "/api/makis" }
+          ],
+          activeTab: "Body",
+          hasBodyDot: true,
+          headersCount: 1,
+          headers: [{ key: "Content-Type", value: "application/json" }],
+          bodyMode: "raw",
+          bodyLang: "JSON",
+          targetBodyLine: 2,
+          bodyLineCallout: "❓ ¿Qué pasa con 999?",
+          bodyLines: [
+            `{`,
+            `  "id": 999,`,
+            `  "name": "California",`,
+            `  "price": 20.5,`,
+            `  "pieces": 8,`,
+            `  "ingredients": "Kanikama, palta, pepino"`,
+            `}`
+          ],
+          showResponse: true,
+          maskResponseUntilAnswered: true,
+          responseMasked: {
+            status: "201 Created",
+            statusClass: "s2xx",
+            time: "19 ms",
+            size: "126 B",
+            body: `{\n  "id": "???",\n  "name": "California",\n  "price": 20.5,\n  "pieces": 8,\n  "ingredients": "Kanikama, palta, pepino"\n}`
+          },
+          response: {
+            status: "201 Created",
+            statusClass: "s2xx",
+            time: "19 ms",
+            size: "126 B",
+            body: `{\n  "id": 3,\n  "name": "California",\n  "price": 20.5,\n  "pieces": 8,\n  "ingredients": "Kanikama, palta, pepino"\n}`
+          }
+        },
+        question: "El servidor acaba de arrancar (solo tiene <code>id: 1</code> y <code>2</code>). Si alguien agrega manualmente <code>\"id\": 999</code> en el Body de Postman y pulsa <strong>Send</strong>, ¿qué <code>id</code> devolverá la respuesta?",
+        options: [
+          "<code>\"id\": 3</code>, porque <code>MakiService.create()</code> ignora <code>maki.id()</code> y asigna <code>nextId++</code>.",
+          "<code>\"id\": 999</code>, porque Jackson copia todos los campos del JSON sin cambios.",
+          "Un error <code>400 Bad Request</code> porque el record <code>Maki</code> prohíbe recibir un <code>id</code> en el JSON.",
+          "<code>\"id\": null</code>, porque el servidor borra el <code>id</code> al crearlo."
+        ],
+        correctIndex: 0,
+        answerShort: "Devuelve id: 3 porque el servidor ignora el id enviado por el cliente.",
+        explanation: "Aunque Jackson deserializa <code>999</code> en el objeto recibido, la línea 36 de <code>MakiService</code> construye un nuevo record con <code>new Maki(nextId++, maki.name(), ...)</code>, descartando el <code>999</code> y asignando el consecutivo <code>3</code>.",
+        ref: "MakiService.java · líneas 34–39"
+      },
+      {
+        id: 12,
+        category: "postman",
+        categoryLabel: "🚀 Postman UI: Barra de Respuesta",
+        difficulty: "Básico",
+        type: "postman",
+        postman: {
+          collection: "Pompompurin Maki API",
+          reqName: "4. Crear Pompompurin Roll (POST)",
+          method: "POST",
+          urlParts: [
+            { text: "{{baseUrl}}", isVar: true },
+            { text: "/api/makis" }
+          ],
+          activeTab: "Body",
+          hasBodyDot: true,
+          headersCount: 1,
+          headers: [{ key: "Content-Type", value: "application/json" }],
+          bodyMode: "raw",
+          bodyLang: "JSON",
+          bodyLines: [
+            `{`,
+            `  "name": "Pompompurin Roll",`,
+            `  "price": 28.0,`,
+            `  "pieces": 10,`,
+            `  "ingredients": "Salmón, mango, queso crema, salsa tare"`,
+            `}`
+          ],
+          showResponse: true,
+          maskResponseUntilAnswered: true,
+          targetZone: "responseStatus",
+          statusCallout: "❓ ¿Qué código aparece aquí?",
+          responseMasked: {
+            status: "??? Status",
+            statusClass: "pending",
+            time: "16 ms",
+            size: "148 B",
+            body: `{\n  "id": 4,\n  "name": "Pompompurin Roll",\n  "price": 28.0,\n  "pieces": 10,\n  "ingredients": "Salmón, mango, queso crema, salsa tare"\n}`
+          },
+          response: {
+            status: "201 Created",
+            statusClass: "s2xx",
+            time: "16 ms",
+            size: "148 B",
+            body: `{\n  "id": 4,\n  "name": "Pompompurin Roll",\n  "price": 28.0,\n  "pieces": 10,\n  "ingredients": "Salmón, mango, queso crema, salsa tare"\n}`
+          }
+        },
+        question: "Luego de crear \"California\" (<code>id: 3</code>), envías esta 4ta petición de la colección en Postman. ¿Qué código de estado HTTP exacto debe aparecer en el indicador señalado?",
+        options: [
+          "<code>200 OK</code>, porque Spring Boot siempre responde 200 en peticiones <code>@PostMapping</code>.",
+          "<code>204 No Content</code>, porque la respuesta ya incluye el objeto en memoria.",
+          "<code>302 Found</code>, redirigiendo automáticamente hacia <code>GET /api/makis/4</code>.",
+          "<code>201 Created</code>, configurado explícitamente mediante <code>@ResponseStatus(HttpStatus.CREATED)</code>."
+        ],
+        correctIndex: 3,
+        answerShort: "201 Created, gracias a @ResponseStatus(HttpStatus.CREATED).",
+        explanation: "La petición 4 crea un nuevo recurso en memoria (el \"Pompompurin Roll\" con <code>id: 4</code>). Como <code>create(...)</code> lleva <code>@ResponseStatus(HttpStatus.CREATED)</code>, Postman muestra <code>201 Created</code>.",
+        ref: "MakiController.java · líneas 40–44 & README.md · líneas 138–147"
+      },
+      {
+        id: 13,
+        category: "postman",
+        categoryLabel: "🚀 Postman UI: Path Variable y 404",
+        difficulty: "Básico",
+        type: "postman",
+        postman: {
+          collection: "Pompompurin Maki API",
+          reqName: "2. Buscar maki por ID (GET)",
+          method: "GET",
+          urlParts: [
+            { text: "{{baseUrl}}", isVar: true },
+            { text: "/api/makis/" },
+            { text: "50", target: true, callout: "❓ ID en URL" }
+          ],
+          activeTab: "Headers",
+          headersCount: 1,
+          headers: [{ key: "Accept", value: "application/json" }],
+          bodyMode: "none",
+          showResponse: true,
+          targetZone: "responseStatus",
+          statusCallout: "❓ Resultado en Response",
+          response: {
+            status: "404 Not Found",
+            statusClass: "s4xx",
+            time: "9 ms",
+            size: "0 B",
+            body: `(Cuerpo vacío)`
+          }
+        },
+        question: "En la UI de Postman modificaste el segmento <code>/1</code> por <code>/50</code> y el panel inferior respondió <code>404 Not Found</code>. ¿Cómo viajó ese <code>50</code> hasta tu código Java?",
+        options: [
+          "Postman lo envió oculto dentro del <code>Body</code> aunque sea una petición <code>GET</code>.",
+          "<code>@GetMapping(\"/{id}\")</code> capturó el segmento de la URL y <code>@PathVariable(\"id\") Long id</code> inyectó el valor <code>50L</code> en el parámetro del método.",
+          "Spring lo leyó desde un query parameter <code>?id=50</code> usando <code>@RequestParam</code>.",
+          "El servidor interpretó <code>/50</code> como el puerto donde corre Tomcat."
+        ],
+        correctIndex: 1,
+        answerShort: "@PathVariable(\"id\") extrae el 50 directamente del segmento /{id} de la URL.",
+        explanation: "Las llaves en <code>@GetMapping(\"/{id}\")</code> declaran una variable de ruta (path variable). <code>@PathVariable(\"id\") Long id</code> toma el <code>50</code> de la URL, busca en <code>MakiService</code>, obtiene <code>Optional.empty()</code> y devuelve <code>404 Not Found</code>.",
+        ref: "MakiController.java · líneas 34–37 & endpoints.json · líneas 42–65"
+      },
+      {
+        id: 14,
+        category: "postman",
+        categoryLabel: "🚀 Postman UI: Pestaña Headers",
+        difficulty: "Intermedio",
+        type: "postman",
+        postman: {
+          collection: "Pompompurin Maki API",
+          reqName: "1. Listar todos los makis (GET)",
+          method: "GET",
+          urlParts: [
+            { text: "{{baseUrl}}", isVar: true },
+            { text: "/api/makis" }
+          ],
+          activeTab: "Headers",
+          headersCount: 1,
+          headers: [
+            { key: "Accept", value: "application/json", target: true, callout: "❓ vs Content-Type" }
+          ],
+          bodyMode: "none",
+          showResponse: false
+        },
+        question: "En <code>endpoints.json</code>, las peticiones <code>GET</code> tienen este header <code>Accept: application/json</code>, mientras las <code>POST</code> llevan <code>Content-Type: application/json</code>. ¿Cuál es la diferencia?",
+        options: [
+          "<code>Accept</code> solo funciona en localhost y <code>Content-Type</code> solo en GitHub Codespaces.",
+          "<code>Accept</code> sirve para autenticar al usuario y <code>Content-Type</code> para definir el puerto 8080.",
+          "<code>Accept</code> le dice al servidor qué formato <strong>quiere recibir</strong> el cliente; <code>Content-Type</code> le dice qué formato <strong>está enviando</strong> el cliente en el Body.",
+          "Son exactamente sinónimos y en un <code>GET</code> se debe mandar siempre el JSON en el Body."
+        ],
+        correctIndex: 2,
+        answerShort: "Accept = formato esperado en respuesta; Content-Type = formato enviado en el Body.",
+        explanation: "Una petición <code>GET</code> no envía cuerpo (<code>Body: none</code>), así que usa <code>Accept</code> para negociar el formato de salida (JSON). Un <code>POST</code> sí lleva cuerpo JSON, por eso declara <code>Content-Type: application/json</code>.",
+        ref: "endpoints.json · líneas 20–26 y 71–77"
+      },
+      {
+        id: 15,
+        category: "arch",
+        categoryLabel: "🧱 Gradle & GitHub Codespaces",
+        difficulty: "Intermedio",
+        type: "code",
+        file: "README.md & devcontainer/devcontainer.json",
+        startLine: 1,
+        focusLines: [2, 3, 7],
+        pointerText: "❓ Carpeta + Puerto 8080",
+        code: `// Comandos de arranque en terminal:
+cd pompompurin
+./gradlew bootRun
+
+// devcontainer/devcontainer.json:
+"image": "mcr.microsoft.com/devcontainers/java:25-bookworm",
+"forwardPorts": [8080]`,
+        question: "Vas a probar la API desde Postman en tu laptop contra un servidor corriendo en GitHub Codespaces. ¿Qué dos errores evitarías recordando estas líneas?",
+        options: [
+          "Ejecutar <code>./gradlew bootRun</code> fuera de la carpeta <code>pompompurin/</code>, y olvidar poner el puerto <code>8080</code> en visibilidad <strong>Public</strong> en Codespaces.",
+          "Ejecutar <code>cd demo</code> primero y cambiar el puerto a <code>3000</code> en <code>endpoints.json</code>.",
+          "Instalar Node.js para levantar Spring Boot y apagar el reenvío del puerto <code>8080</code>.",
+          "Escribir <code>POST</code> con <code>localhost:8080</code> desde tu PC esperando que se conecte a la nube de GitHub."
+        ],
+        correctIndex: 0,
+        answerShort: "Correr gradlew dentro de pompompurin/ y poner el puerto 8080 en Public.",
+        explanation: "El wrapper de Gradle (<code>gradlew</code>) y <code>build.gradle</code> de esta API están dentro de <code>pompompurin/</code>. Además, en Codespaces un puerto privado exige autenticación de GitHub que Postman externo no envía por defecto, por eso se cambia a <code>Public</code>.",
+        ref: "README.md · líneas 153–166 & devcontainer.json · línea 4"
+      },
+      {
+        id: 16,
+        category: "postman",
+        categoryLabel: "🚀 Postman UI: Deserialización JSON",
+        difficulty: "Trampa común",
+        type: "postman",
+        postman: {
+          collection: "Pompompurin Maki API",
+          reqName: "3. Crear maki California (POST)",
+          method: "POST",
+          urlParts: [
+            { text: "{{baseUrl}}", isVar: true },
+            { text: "/api/makis" }
+          ],
+          activeTab: "Body",
+          hasBodyDot: true,
+          headersCount: 1,
+          headers: [{ key: "Content-Type", value: "application/json" }],
+          bodyMode: "raw",
+          bodyLang: "JSON",
+          targetBodyLine: 4,
+          bodyLineCallout: "❓ String en campo int",
+          bodyLines: [
+            `{`,
+            `  "name": "California",`,
+            `  "price": 20.5,`,
+            `  "pieces": "diez",`,
+            `  "ingredients": "Kanikama, palta, pepino"`,
+            `}`
+          ],
+          showResponse: true,
+          maskResponseUntilAnswered: true,
+          responseMasked: {
+            status: "??? Error",
+            statusClass: "pending",
+            time: "7 ms",
+            size: "112 B",
+            body: `// ¿Qué responde Spring Boot antes de llegar a MakiService?`
+          },
+          response: {
+            status: "400 Bad Request",
+            statusClass: "s4xx",
+            time: "7 ms",
+            size: "112 B",
+            body: `{\n  "status": 400,\n  "error": "Bad Request",\n  "path": "/api/makis"\n}`
+          }
+        },
+        question: "En Postman enviaste por error <code>\"pieces\": \"diez\"</code> (texto entre comillas), pero en <code>record Maki</code> el campo es <code>int pieces</code>. ¿Qué responde Spring Boot?",
+        options: [
+          "<code>201 Created</code>, guardando <code>pieces</code> como <code>0</code> por defecto.",
+          "<code>404 Not Found</code>, porque no encuentra ningún maki llamado \"diez\".",
+          "<code>200 OK</code>, convirtiendo automáticamente la palabra \"diez\" al número <code>10</code>.",
+          "<code>400 Bad Request</code>, porque Jackson no puede convertir el texto <code>\"diez\"</code> a un entero <code>int</code> al leer <code>@RequestBody</code>."
+        ],
+        correctIndex: 3,
+        answerShort: "400 Bad Request por error de deserialización JSON → int.",
+        explanation: "Antes de ejecutar el cuerpo de <code>MakiController.create()</code>, Spring intenta deserializar el JSON hacia <code>Maki(Long id, String name, double price, int pieces, String ingredients)</code>. Al no poder convertir <code>\"diez\"</code> en <code>int</code>, responde <code>400 Bad Request</code>.",
+        ref: "Maki.java · línea 4 & MakiController.java · línea 42"
+      }
+    ];
+
+    const STORAGE_KEY = "pompompurin_eval_cards_v1";
+
+    const state = {
+      mode: "quiz", // "quiz" | "flash"
+      filter: "all",
+      order: CARDS.map(c => c.id),
+      currentPos: 0,
+      results: {}, // { [cardId]: { status: "ok"|"bad", selectedIndex?: number } }
+      flipped: {}, // { [cardId]: boolean }
+      streak: 0,
+      pmTabOverride: {} // optional user inspection of Postman tabs
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          if (parsed.results) state.results = parsed.results;
+          if (typeof parsed.streak === "number") state.streak = parsed.streak;
+          if (parsed.mode === "quiz" || parsed.mode === "flash") state.mode = parsed.mode;
+        }
+      } catch (_) {}
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          results: state.results,
+          streak: state.streak,
+          mode: state.mode
+        }));
+      } catch (_) {}
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    const JAVA_KW = new Set([
+      "package","import","public","private","protected","class","record","interface",
+      "return","new","final","void","for","if","else","true","false","null",
+      "double","int","long","cd"
+    ]);
+    const JAVA_TYPES = new Set([
+      "List","ArrayList","Optional","ResponseEntity","Maki","MakiService",
+      "MakiController","ControllerDemo","Long","String","Map","HashMap","Object","Date","HttpStatus"
+    ]);
+
+    function highlightJavaLine(line) {
+      const tokenRe = /(\/\/.*$)|("(?:\\.|[^"\\])*")|(@[A-Za-z_]\w*)|(\b[A-Za-z_]\w*\b)|(\b\d+(?:\.\d+)?\b)|([\s\S])/g;
+      let out = "";
+      let m;
+      while ((m = tokenRe.exec(line)) !== null) {
+        if (m[1]) out += `<span class="tok-com">${escapeHtml(m[1])}</span>`;
+        else if (m[2]) out += `<span class="tok-str">${escapeHtml(m[2])}</span>`;
+        else if (m[3]) out += `<span class="tok-ann">${escapeHtml(m[3])}</span>`;
+        else if (m[4]) {
+          const w = m[4];
+          if (JAVA_KW.has(w)) out += `<span class="tok-kw">${escapeHtml(w)}</span>`;
+          else if (JAVA_TYPES.has(w)) out += `<span class="tok-type">${escapeHtml(w)}</span>`;
+          else out += escapeHtml(w);
+        } else if (m[5]) out += `<span class="tok-num">${escapeHtml(m[5])}</span>`;
+        else out += escapeHtml(m[6]);
+      }
+      return out || " ";
+    }
+
+    function highlightJsonLine(line) {
+      const tokenRe = /(\/\/.*$)|("(?:\\.|[^"\\])*"(?=\s*:))|("(?:\\.|[^"\\])*")|(\b(?:true|false|null)\b)|(-?\b\d+(?:\.\d+)?\b)|([\s\S])/g;
+      let out = "";
+      let m;
+      while ((m = tokenRe.exec(line)) !== null) {
+        if (m[1]) out += `<span class="tok-com">${escapeHtml(m[1])}</span>`;
+        else if (m[2]) out += `<span class="tok-key">${escapeHtml(m[2])}</span>`;
+        else if (m[3]) out += `<span class="tok-str">${escapeHtml(m[3])}</span>`;
+        else if (m[4]) out += `<span class="tok-kw">${escapeHtml(m[4])}</span>`;
+        else if (m[5]) out += `<span class="tok-num">${escapeHtml(m[5])}</span>`;
+        else out += escapeHtml(m[6]);
+      }
+      return out || " ";
+    }
+
+    function getFilteredCards() {
+      const cardMap = new Map(CARDS.map(c => [c.id, c]));
+      const ordered = state.order.map(id => cardMap.get(id)).filter(Boolean);
+      if (state.filter === "all") return ordered;
+      if (state.filter === "missed") {
+        return ordered.filter(c => state.results[c.id]?.status === "bad");
+      }
+      return ordered.filter(c => c.category === state.filter);
+    }
+
+    function isCardRevealed(card) {
+      if (state.mode === "quiz") return Boolean(state.results[card.id]);
+      return Boolean(state.flipped[card.id] || state.results[card.id]);
+    }
+
+    function renderCodeEvidence(card) {
+      const lines = card.code.split("\n");
+      const focusSet = new Set(card.focusLines || []);
+      const firstFocus = card.focusLines && card.focusLines[0];
+
+      const linesHtml = lines.map((line, idx) => {
+        const lineNum = (card.startLine || 1) + idx;
+        const isFocused = focusSet.has(lineNum);
+        const showPointer = lineNum === firstFocus && card.pointerText;
+        const pointerHtml = showPointer
+          ? `<span class="line-pointer">${escapeHtml(card.pointerText)}</span>`
+          : "";
+        return `
+          <div class="code-line ${isFocused ? "focused" : ""}">
+            <span class="ln">${lineNum}</span>
+            <span class="code-content">${highlightJavaLine(line)}${pointerHtml}</span>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="evidence-label">
+          <span>Archivo de referencia en el repositorio</span>
+          <span class="pointer-legend">📍 Líneas señaladas en ámbar</span>
+        </div>
+        <div class="ide-window">
+          <div class="ide-titlebar">
+            <span class="window-dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span>
+            <span>${escapeHtml(card.file)}</span>
+          </div>
+          <div class="code-body">${linesHtml}</div>
+        </div>
+      `;
+    }
+
+    function renderPostmanEvidence(card) {
+      const pm = card.postman;
+      const revealed = isCardRevealed(card);
+      const activeTab = state.pmTabOverride[card.id] || pm.activeTab || "Body";
+
+      const urlHtml = pm.urlParts.map(part => {
+        const cls = [
+          part.isVar ? "pm-var" : "",
+          part.target ? "pm-target" : ""
+        ].filter(Boolean).join(" ");
+        const tag = part.target && part.callout
+          ? `<span class="pm-callout-tag">${escapeHtml(part.callout)}</span>`
+          : "";
+        return `<span class="${cls}">${escapeHtml(part.text)}</span>${tag}`;
+      }).join("");
+
+      const bodyLines = pm.bodyLines || [];
+      const bodyEditorHtml = bodyLines.length
+        ? bodyLines.map((line, i) => {
+            const ln = i + 1;
+            const isTarget = pm.targetBodyLine === ln;
+            const callout = isTarget && pm.bodyLineCallout
+              ? `<span class="line-pointer">${escapeHtml(pm.bodyLineCallout)}</span>`
+              : "";
+            return `
+              <div class="code-line ${isTarget ? "focused" : ""}">
+                <span class="ln">${ln}</span>
+                <span class="code-content">${highlightJsonLine(line)}${callout}</span>
+              </div>
+            `;
+          }).join("")
+        : `<div style="padding:14px; color:var(--pm-muted); font-family:var(--font-sans); font-size:0.76rem;">Esta petición no envía cuerpo (<code>none</code>).</div>`;
+
+      const displayHeaders = (pm.headersMasked && !revealed) ? pm.headersMasked : (pm.headers || []);
+      const headersRows = displayHeaders.map(h => {
+        const rowCls = h.target ? "pm-target" : "";
+        const badge = h.target && h.callout
+          ? `<span class="pm-callout-tag">${escapeHtml(h.callout)}</span>`
+          : "";
+        return `
+          <tr class="${rowCls}">
+            <td style="width:28px; color:#4ade80; text-align:center;">✓</td>
+            <td style="color:#93c5fd;">${escapeHtml(h.key)}</td>
+            <td style="color:#e5e7eb;">${escapeHtml(h.value)}${badge}</td>
+          </tr>
+        `;
+      }).join("");
+
+      const tabContentHtml = activeTab === "Headers"
+        ? `<table class="pm-headers-table">
+             <thead><tr><th></th><th>Key</th><th>Value</th></tr></thead>
+             <tbody>${headersRows}</tbody>
+           </table>`
+        : `
+          <div class="pm-subbar">
+            <span class="pm-radio ${pm.bodyMode === "none" ? "selected" : ""}"><span class="pm-radio-circle"></span> none</span>
+            <span class="pm-radio"><span class="pm-radio-circle"></span> form-data</span>
+            <span class="pm-radio ${pm.bodyMode === "raw" ? "selected" : ""}"><span class="pm-radio-circle"></span> raw</span>
+            ${pm.bodyMode === "raw"
+              ? `<span class="pm-lang-pill ${pm.targetZone === "bodyLang" ? "pm-target" : ""}">${escapeHtml(pm.bodyLang || "JSON")} ▾</span>${
+                  pm.targetZone === "bodyLang" && pm.bodyCallout
+                    ? `<span class="pm-callout-tag">${escapeHtml(pm.bodyCallout)}</span>`
+                    : ""
+                }`
+              : ""}
+          </div>
+          <div class="pm-body-editor">${bodyEditorHtml}</div>
+        `;
+
+      let responseHtml = "";
+      if (pm.showResponse) {
+        const res = (pm.maskResponseUntilAnswered && !revealed) ? pm.responseMasked : pm.response;
+        const statusCls = pm.targetZone === "responseStatus" ? "pm-target" : "";
+        const statusCallout = pm.targetZone === "responseStatus" && pm.statusCallout
+          ? `<span class="pm-callout-tag">${escapeHtml(pm.statusCallout)}</span>`
+          : "";
+        const resLines = res.body.split("\n").map((line, idx) => `
+          <div class="code-line">
+            <span class="ln">${idx + 1}</span>
+            <span class="code-content">${highlightJsonLine(line)}</span>
+          </div>
+        `).join("");
+
+        responseHtml = `
+          <div class="pm-response">
+            <div class="pm-res-bar">
+              <span style="font-weight:700; color:var(--pm-muted);">Response · Pretty (JSON)</span>
+              <div class="pm-res-meta">
+                <span>Status: <span class="pm-status ${res.statusClass} ${statusCls}">${escapeHtml(res.status)}</span>${statusCallout}</span>
+                <span style="color:var(--pm-muted);">Time: <strong style="color:#4ade80;">${escapeHtml(res.time)}</strong></span>
+                <span style="color:var(--pm-muted);">Size: <strong style="color:#4ade80;">${escapeHtml(res.size)}</strong></span>
+              </div>
+            </div>
+            <div class="pm-body-editor">${resLines}</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="evidence-label">
+          <span>Simulación UI de Postman (colección <code>endpoints.json</code>)</span>
+          <span class="pointer-legend">📍 Elemento señalado en Postman</span>
+        </div>
+        <div class="postman-ui">
+          <div class="pm-topbar">
+            <div class="pm-crumb">
+              <span class="pm-logo">POSTMAN</span>
+              <span>›</span>
+              <span>${escapeHtml(pm.collection)}</span>
+              <span>›</span>
+              <span class="pm-req-name">${escapeHtml(pm.reqName)}</span>
+            </div>
+            <span>Env: Local / Codespaces</span>
+          </div>
+
+          <div class="pm-request-bar">
+            <div class="pm-url-box">
+              <span class="pm-method ${pm.method}">${pm.method} ▾</span>
+              <div class="pm-url">${urlHtml}</div>
+            </div>
+            <button type="button" class="pm-send" data-pm-send="true" title="Responde la pregunta para evaluar el envío">Send</button>
+          </div>
+
+          <div class="pm-tabs">
+            <span class="pm-tab" style="cursor:default; opacity:.65;">Params</span>
+            <span class="pm-tab" style="cursor:default; opacity:.65;">Authorization</span>
+            <button type="button" class="pm-tab ${activeTab === "Headers" ? "active" : ""}" data-pm-tab="Headers">
+              Headers (${pm.headersCount || 0})
+            </button>
+            <button type="button" class="pm-tab ${activeTab === "Body" ? "active" : ""}" data-pm-tab="Body">
+              Body ${pm.hasBodyDot ? '<span class="pm-dot-ind"></span>' : ""}
+            </button>
+          </div>
+
+          ${tabContentHtml}
+          ${responseHtml}
+        </div>
+      `;
+    }
+
+    function renderCard() {
+      const deck = getFilteredCards();
+      const cardBadgesEl = document.getElementById("card-badges");
+      const counterEl = document.getElementById("card-counter");
+      const evidenceEl = document.getElementById("evidence-pane");
+      const qaEl = document.getElementById("qa-pane");
+
+      if (deck.length === 0) {
+        cardBadgesEl.innerHTML = `<span class="badge badge-arch">Sin cartas en este filtro</span>`;
+        counterEl.textContent = "0 / 0";
+        evidenceEl.innerHTML = `<p style="color:var(--muted); margin:0;">No hay cartas pendientes por repasar. ¡Excelente trabajo!</p>`;
+        qaEl.innerHTML = `<button class="btn-primary" onclick="setFilter('all')">Volver a todas las cartas</button>`;
+        renderDeckDots(deck);
+        updateStats();
+        return;
+      }
+
+      if (state.currentPos >= deck.length) state.currentPos = deck.length - 1;
+      if (state.currentPos < 0) state.currentPos = 0;
+
+      const card = deck[state.currentPos];
+      const result = state.results[card.id];
+      const revealed = isCardRevealed(card);
+
+      // Badges
+      const catBadgeClass = card.category === "postman"
+        ? "badge-postman"
+        : card.category === "arch" ? "badge-arch" : "badge-code";
+
+      let statusBadge = "";
+      if (result?.status === "ok") statusBadge = `<span class="badge badge-status-ok">✓ Dominada</span>`;
+      else if (result?.status === "bad") statusBadge = `<span class="badge badge-status-bad">↻ Repasar</span>`;
+
+      cardBadgesEl.innerHTML = `
+        <span class="badge ${catBadgeClass}">${escapeHtml(card.categoryLabel)}</span>
+        <span class="badge badge-diff">${escapeHtml(card.difficulty)}</span>
+        ${statusBadge}
+      `;
+      counterEl.textContent = `Carta ${state.currentPos + 1} / ${deck.length}`;
+
+      // Evidence
+      evidenceEl.innerHTML = card.type === "postman"
+        ? renderPostmanEvidence(card)
+        : renderCodeEvidence(card);
+
+      // Bind Postman interactive inspection tabs
+      evidenceEl.querySelectorAll("[data-pm-tab]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.pmTabOverride[card.id] = btn.dataset.pmTab;
+          renderCard();
+        });
+      });
+      const sendBtn = evidenceEl.querySelector("[data-pm-send]");
+      if (sendBtn) {
+        sendBtn.addEventListener("click", () => {
+          const hint = qaEl.querySelector(".question-text");
+          if (hint) {
+            hint.animate([{ opacity: 0.5 }, { opacity: 1 }], { duration: 280 });
+          }
+        });
+      }
+
+      // QA Pane
+      let interactionHtml = "";
+      if (state.mode === "quiz") {
+        const letters = ["A", "B", "C", "D"];
+        const optionsHtml = card.options.map((opt, idx) => {
+          let cls = "";
+          if (result) {
+            if (idx === card.correctIndex) cls = "correct";
+            else if (idx === result.selectedIndex) cls = "wrong";
+          }
+          return `
+            <button type="button" class="option-btn ${cls}" data-opt-idx="${idx}" ${result ? "disabled" : ""}>
+              <span class="option-key">${letters[idx]}</span>
+              <span>${opt}</span>
+            </button>
+          `;
+        }).join("");
+        interactionHtml = `<div class="options-list">${optionsHtml}</div>`;
+      } else {
+        if (!revealed) {
+          interactionHtml = `
+            <div class="flashcard-actions">
+              <button type="button" class="btn-primary" id="btn-flip">🔄 Voltear Carta / Ver Respuesta (Espacio)</button>
+            </div>
+          `;
+        } else {
+          interactionHtml = `
+            <div class="flashcard-actions">
+              <div class="self-grade-row">
+                <button type="button" class="btn-ok" id="btn-grade-ok">✓ Ya la sabía</button>
+                <button type="button" class="btn-bad" id="btn-grade-bad">↻ Marcar para repasar</button>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      let expClass = "";
+      let expTitle = "";
+      if (revealed) {
+        if (result?.status === "ok") {
+          expClass = "visible state-ok";
+          expTitle = "✓ ¡Correcto!";
+        } else if (result?.status === "bad") {
+          expClass = "visible state-bad";
+          expTitle = "✗ Revisa este punto";
+        } else {
+          expClass = "visible state-info";
+          expTitle = `💡 Respuesta: ${escapeHtml(card.answerShort)}`;
+        }
+      }
+
+      qaEl.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:15px;">
+          <h2 class="question-text">${card.question}</h2>
+          ${interactionHtml}
+        </div>
+        <div class="explanation-box ${expClass}">
+          <div class="exp-title">
+            <span>${expTitle}</span>
+          </div>
+          <div>${card.explanation}</div>
+          <div class="exp-ref">📌 Fuente: ${escapeHtml(card.ref)}</div>
+        </div>
+      `;
+
+      // Bind quiz options
+      qaEl.querySelectorAll("[data-opt-idx]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          answerQuiz(card, Number(btn.dataset.optIdx));
+        });
+      });
+
+      const flipBtn = qaEl.querySelector("#btn-flip");
+      if (flipBtn) {
+        flipBtn.addEventListener("click", () => {
+          state.flipped[card.id] = true;
+          renderCard();
+        });
+      }
+
+      const okBtn = qaEl.querySelector("#btn-grade-ok");
+      if (okBtn) {
+        okBtn.addEventListener("click", () => gradeFlash(card, true));
+      }
+      const badBtn = qaEl.querySelector("#btn-grade-bad");
+      if (badBtn) {
+        badBtn.addEventListener("click", () => gradeFlash(card, false));
+      }
+
+      document.getElementById("btn-prev").disabled = state.currentPos === 0;
+      document.getElementById("btn-next").disabled = state.currentPos >= deck.length - 1;
+
+      renderDeckDots(deck);
+      updateStats();
+    }
+
+    function answerQuiz(card, selectedIdx) {
+      if (state.results[card.id]) return;
+      const isOk = selectedIdx === card.correctIndex;
+      state.results[card.id] = { status: isOk ? "ok" : "bad", selectedIndex: selectedIdx };
+      state.streak = isOk ? state.streak + 1 : 0;
+      saveState();
+      renderCard();
+      if (Object.keys(state.results).length === CARDS.length) {
+        showSummary();
+      }
+    }
+
+    function gradeFlash(card, isOk) {
+      state.results[card.id] = { status: isOk ? "ok" : "bad" };
+      state.streak = isOk ? state.streak + 1 : 0;
+      saveState();
+      const deck = getFilteredCards();
+      if (state.currentPos < deck.length - 1) {
+        state.currentPos++;
+      } else if (Object.keys(state.results).length === CARDS.length) {
+        showSummary();
+      }
+      renderCard();
+    }
+
+    function renderDeckDots(deck) {
+      const container = document.getElementById("deck-dots");
+      container.innerHTML = deck.map((c, idx) => {
+        const res = state.results[c.id];
+        const cls = [
+          "deck-num",
+          idx === state.currentPos ? "current" : "",
+          res?.status === "ok" ? "done-ok" : res?.status === "bad" ? "done-bad" : ""
+        ].filter(Boolean).join(" ");
+        return `<button type="button" class="${cls}" data-jump="${idx}" title="Ir a carta ${idx + 1}">${idx + 1}</button>`;
+      }).join("");
+
+      container.querySelectorAll("[data-jump]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.currentPos = Number(btn.dataset.jump);
+          renderCard();
+        });
+      });
+    }
+
+    function updateFilterCounts() {
+      const counts = { all: CARDS.length, code: 0, postman: 0, arch: 0 };
+      for (const c of CARDS) counts[c.category] = (counts[c.category] || 0) + 1;
+      document.getElementById("chip-all").textContent = `Todas (${counts.all})`;
+      document.getElementById("chip-code").textContent = `💻 Código Java & Spring (${counts.code})`;
+      document.getElementById("chip-postman").textContent = `🚀 UI Postman (${counts.postman})`;
+      document.getElementById("chip-arch").textContent = `🧱 Arquitectura & Despliegue (${counts.arch})`;
+    }
+
+    function updateStats() {
+      const answered = Object.keys(state.results).length;
+      const correct = Object.values(state.results).filter(r => r.status === "ok").length;
+      const missed = Object.values(state.results).filter(r => r.status === "bad").length;
+
+      document.getElementById("stat-progress").textContent = `${answered} / ${CARDS.length} respondidas`;
+      document.getElementById("stat-score").textContent = `✓ ${correct} aciertos`;
+      document.getElementById("stat-streak").textContent = `🔥 Racha: ${state.streak}`;
+      document.getElementById("progress-fill").style.width = `${Math.round((answered / CARDS.length) * 100)}%`;
+
+      const missedBtn = document.getElementById("btn-filter-missed");
+      missedBtn.textContent = `↻ Por repasar (${missed})`;
+      missedBtn.disabled = missed === 0;
+      if (missed === 0 && state.filter === "missed") {
+        setFilter("all");
+      }
+    }
+
+    function setFilter(filterName) {
+      state.filter = filterName;
+      state.currentPos = 0;
+      document.querySelectorAll("#filter-group .chip").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.filter === filterName);
+      });
+      renderCard();
+    }
+
+    function showSummary() {
+      const panel = document.getElementById("summary-panel");
+      const grid = document.getElementById("summary-grid");
+      const title = document.getElementById("summary-title");
+      const subtitle = document.getElementById("summary-subtitle");
+
+      const answered = Object.keys(state.results).length;
+      const correct = Object.values(state.results).filter(r => r.status === "ok").length;
+      const pct = answered ? Math.round((correct / CARDS.length) * 100) : 0;
+
+      let rank = "En calentamiento — sigue repasando las cartas";
+      if (pct >= 90) rank = "Maestro de Pompompurin API 🍣";
+      else if (pct >= 70) rank = "Buen dominio — solo ajusta los detalles marcados";
+      else if (pct >= 50) rank = "Base sólida — repasa las cartas falladas";
+
+      title.textContent = `Evaluación: ${correct} / ${CARDS.length} (${pct}%)`;
+      subtitle.textContent = rank;
+
+      const byCat = {
+        code: { name: "Código Java & Spring", total: 0, ok: 0 },
+        postman: { name: "UI Postman", total: 0, ok: 0 },
+        arch: { name: "Arquitectura & Despliegue", total: 0, ok: 0 }
+      };
+      for (const c of CARDS) {
+        byCat[c.category].total++;
+        if (state.results[c.id]?.status === "ok") byCat[c.category].ok++;
+      }
+
+      grid.innerHTML = Object.values(byCat).map(cat => `
+        <div class="sum-box">
+          <small>${cat.name}</small>
+          <strong>${cat.ok} / ${cat.total}</strong>
+        </div>
+      `).join("");
+
+      const missedCount = Object.values(state.results).filter(r => r.status === "bad").length;
+      document.getElementById("btn-review-missed").style.display = missedCount > 0 ? "inline-flex" : "none";
+      panel.classList.add("visible");
+    }
+
+    // Bind global controls
+    document.querySelectorAll("#filter-group .chip").forEach(btn => {
+      btn.addEventListener("click", () => setFilter(btn.dataset.filter));
+    });
+
+    document.getElementById("mode-quiz").addEventListener("click", () => {
+      state.mode = "quiz";
+      document.getElementById("mode-quiz").classList.add("active");
+      document.getElementById("mode-flash").classList.remove("active");
+      saveState();
+      renderCard();
+    });
+
+    document.getElementById("mode-flash").addEventListener("click", () => {
+      state.mode = "flash";
+      document.getElementById("mode-flash").classList.add("active");
+      document.getElementById("mode-quiz").classList.remove("active");
+      saveState();
+      renderCard();
+    });
+
+    document.getElementById("btn-prev").addEventListener("click", () => {
+      if (state.currentPos > 0) { state.currentPos--; renderCard(); }
+    });
+
+    document.getElementById("btn-next").addEventListener("click", () => {
+      const deck = getFilteredCards();
+      if (state.currentPos < deck.length - 1) { state.currentPos++; renderCard(); }
+    });
+
+    document.getElementById("btn-shuffle").addEventListener("click", () => {
+      for (let i = state.order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [state.order[i], state.order[j]] = [state.order[j], state.order[i]];
+      }
+      state.currentPos = 0;
+      renderCard();
+    });
+
+    document.getElementById("btn-summary").addEventListener("click", showSummary);
+    document.getElementById("btn-close-summary").addEventListener("click", () => {
+      document.getElementById("summary-panel").classList.remove("visible");
+    });
+
+    document.getElementById("btn-review-missed").addEventListener("click", () => {
+      document.getElementById("summary-panel").classList.remove("visible");
+      setFilter("missed");
+    });
+
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      state.results = {};
+      state.flipped = {};
+      state.pmTabOverride = {};
+      state.streak = 0;
+      state.order = CARDS.map(c => c.id);
+      state.currentPos = 0;
+      document.getElementById("summary-panel").classList.remove("visible");
+      saveState();
+      setFilter("all");
+    });
+
+    document.getElementById("btn-theme").addEventListener("click", () => {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === "dark" ? "light" : "dark";
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      const deck = getFilteredCards();
+      const card = deck[state.currentPos];
+      if (!card) return;
+
+      if (e.key === "ArrowRight" && state.currentPos < deck.length - 1) {
+        state.currentPos++;
+        renderCard();
+      } else if (e.key === "ArrowLeft" && state.currentPos > 0) {
+        state.currentPos--;
+        renderCard();
+      } else if (e.key === " " && state.mode === "flash") {
+        e.preventDefault();
+        state.flipped[card.id] = !state.flipped[card.id];
+        renderCard();
+      } else if (state.mode === "quiz" && ["1","2","3","4"].includes(e.key)) {
+        const idx = Number(e.key) - 1;
+        if (idx < card.options.length && !state.results[card.id]) {
+          answerQuiz(card, idx);
+        }
+      }
+    });
+
+    // Init
+    loadState();
+    updateFilterCounts();
+    if (state.mode === "flash") {
+      document.getElementById("mode-flash").classList.add("active");
+      document.getElementById("mode-quiz").classList.remove("active");
+    }
+    renderCard();
+  </script>
+</body>
+</html>

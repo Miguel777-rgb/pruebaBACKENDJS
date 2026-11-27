@@ -1,0 +1,19 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.import.gradle.java.home": "C:\\Program Files\\Zulu\\zulu-25",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-25",
+            "path": "C:\\Program Files\\Zulu\\zulu-25",
+            "default": true
+        },
+        {
+            "name": "JavaSE-27",
+            "path": "C:\\Program Files\\Zulu\\zulu-27"
+        },
+        {
+            "name": "JavaSE-21",
+            "path": "C:\\Program Files\\Java\\jdk-21"
+        }
+    ]
+}
