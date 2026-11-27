@@ -47,6 +47,6 @@ public class Maki {
     public String getIngredients() { return ingredients; }
     public void setIngredients(String ingredients) { this.ingredients = ingredients; }
 
-    public double getCosto() { return price; }
-    public void setCosto(double price) { this.price = price; }
+    public double getCosto() { return costo; }
+    public void setCosto(double costo) { this.costo = costo; }
 }
